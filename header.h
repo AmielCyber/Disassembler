@@ -1,6 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
 #include <string>
+#include <iostream>
+#include <stdio.h>
 using namespace std;
 
 /* Valid Op codes */
