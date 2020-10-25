@@ -23,6 +23,7 @@ class Assembler{
 		map<string,string> literalTable;
 		int size;
 		string getNextAddress();
+		string getFormat2Labels(string mnemonic, string r1, string r2);
 		void addInstruction(int type, string address, string label, string mnemonic,
                             string operandAddress, string opCode);
 	public:

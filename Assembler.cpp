@@ -8,6 +8,33 @@ string Assembler::getNextAddress(){
 	
 }
 /**
+ * INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE
+ * @param mnemonic
+ * @param r1
+ * @param r2
+ * @return
+ */
+string Assembler::getFormat2Labels(string mnemonic, string r1, string r2) {
+    string operandLabel;
+    string str_r1;
+    string str_r2;
+    string n;
+    if(mnemonic == "SVC"){
+        // turn n value into a decimal value
+    }else if (mnemonic == "SHIFTL" || mnemonic == "SHIFTR"){
+        str_r1 = SIC_XE_RegisterMap.at(r1);
+        // turn n value into a decimal value
+    }else if (mnemonic == "CLEAR" || mnemonic == "TIXR"){
+        str_r1 = SIC_XE_RegisterMap.at(r1);
+        operandLabel = str_r1;
+    }else{
+        str_r1 = SIC_XE_RegisterMap.at(r1);
+        str_r2 = SIC_XE_RegisterMap.at(r2);
+        operandLabel = str_r1 + "," + str_r2;
+    }
+    return operandLabel;
+}
+/**
  * addInstruction adds an assembly instruction line to our assembler code
  * @param type              The format type of the instruction (2-4)
  * @param address           The address where this instruction starts at
@@ -79,7 +106,8 @@ void Assembler::addFormat2(string opCode){
 	string address(getNextAddress());   // Get next address for the new line
 	string label = getLabel(address);   // Label for this address
 	string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
-	string operandAddress = " "; // Operand Address which will be a label
+    // Operand Address which will be a label
+	string operandAddress = getFormat2Labels(mnemonic,r1, r2);
     addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
 }
 
@@ -98,7 +126,7 @@ void Assembler::addFormat3(string opCode){
  * @param opCode The 4 byte length opcode
  */
 void Assembler::addFormat4(string opCode){
-
+    int TYPE = 4;
 }
 
 /**
@@ -209,6 +237,7 @@ struct InstructionLine Assembler::getInstruction(int position){
     }
     return instruction;
 }
+
 
 void Assembler::printAssembler(){
 
