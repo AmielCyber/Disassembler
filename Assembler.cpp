@@ -5,7 +5,7 @@ Assembler::Assembler(){
 	size = 0;
 }
 string Assembler::getNextAddress(){
-	
+	return "";
 }
 /**
  * INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE

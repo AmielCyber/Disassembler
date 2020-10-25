@@ -8,7 +8,7 @@
 
 using namespace std;
 
-map<string,  string> mnemonicMap = {
+static map<string,  string> mnemonicMap = {
 	{"18","ADD"},	    {"68","LDB"},   {"0C","STA"},
 	{"58","ADDF"},	{"50","LDCH"},  {"78","STB"}, 
 	{"90","ADDR"},	{"70","LDF"},   {"54","STCH"},
@@ -31,7 +31,7 @@ map<string,  string> mnemonicMap = {
 	{"00","LDA"},	    {"EC","SSK"}
 };
 
-map<string, int>  formatTypeMap= {
+static map<string, int>  formatTypeMap= {
 	{"18",3},	{"68",3},   {"0C",3},
 	{"58",3},	{"50",3},   {"78",3},
 	{"90",2},	{"70",3},   {"54",3},
@@ -54,7 +54,7 @@ map<string, int>  formatTypeMap= {
 	{"00",3},	{"EC",3}
 };
 
-map<string,string> SIC_XE_RegisterMap = {
+static map<string,string> SIC_XE_RegisterMap = {
         {"0","A"},{"1","X"},{"2","L"},
         {"3","B"},{"4","S"},{"5","T"},
         {"6","F"},
