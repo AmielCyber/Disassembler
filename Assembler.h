@@ -21,10 +21,13 @@ class Assembler{
 		int size;
 	public:
 		Assembler();
+		void addHeader(string header);
+		void addEnd(string end);
 		void addFormat1(string opCode);
 		void addFormat2(string opCode);
 		void addFormat3(string opCode);
 		void addFormat4(string opCode);
+		string getNextAddress();
 		int getFormatType(string op);
 		void changeOperandAddress(string address, string newOperandAddress);
 		void changeLabel(string address, string newLabel);

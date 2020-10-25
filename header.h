@@ -3,46 +3,58 @@
 #include <string>		// To use the string object class
 #include <iostream>		// To use cout and cin object
 #include <stdio.h>		// To use standard input and output object
+#include <map>
+#include <vector>
+
 using namespace std;
 
-/* Valid Op codes */
-const static string ops[] = {
-"18", "58", "90", "40", "B4", "28",
-"88", "A0", "24", "64", "9C", "C4",
-"C0", "F4", "3C", "30", "34", "38",
-"48", "00", "68", "50", "70", "08",
-"6C", "74", "04", "D0", "20", "60",
-"98", "C8", "44", "D8", "AC", "4C",
-"A4", "A8", "F0", "EC", "0C", "78",
-"54", "80", "D4", "14", "7C", "E8",
-"84", "10", "1C", "5C", "94", "B0",
-"E0", "F8", "2C", "B8", "DC"
-};
-/* Valid Mnemonics table */ 
-const static string mnemonics[] = {
-"ADD", "ADDF", "ADDR", "AND", "CLEAR", "COMP",
-"COMPF", "COMPR", "DIV", "DIVF", "DIVR", "FIX",
-"FLOAT", "HIO", "J", "JEQ", "JGT", "JLT",
-"JSUB", "LDA", "LDB", "LDCH", "LDF", "LDL",
-"LDS", "LDT", "LDX", "LPS", "MUL", "MULF",
-"MULR", "NORM", "OR", "RD", "RMO", "RSUB",
-"SHIFTL", "SHIFTR", "SIO", "SSK", "STA", "STB",
-"STCH", "STF", "STI", "STL","STS", "STSW",
-"STT", "STX", "SUB", "SUBF", "SUBR", "SVC",
-"TD", "TIO", "TIX", "TIXR", "WD"
+map<string,  string> mnemonic = {
+	{"18","ADD"},	{"68","LDB"},	{"0C","STA"},
+	{"58","ADDF"},	{"50","LDCH"},  {"78","STB"}, 
+	{"90","ADDR"},	{"70","LDF"},   {"54","STCH"},
+	{"4O","AND"},	{"08","LDL"},   {"80","STF"},
+	{"B4","CLEAR"},	{"6C","LDS"},   {"D4","STI"},
+	{"28","COMP"},	{"74","LDT"},   {"14","STL"},
+	{"88","COMPF"},	{"04","LDX"},   {"7C","STS"},
+	{"A0","COMPR"},	{"D0","LPS"},   {"E8","STSW"},
+	{"24","DIV"},	{"20","MUL"},   {"84","STT"},
+	{"64","DIVF"},	{"60","MULF"},  {"10","STX"},
+	{"9C","DIVR"},	{"98","MULR"},  {"1C","SUB"},
+	{"C4","FIX"},	{"C8","NORM"},  {"5C","SUBF"},
+	{"C0","FLOAT"},	{"44","OR"},    {"94","SUBR"},
+	{"F4","HIO"},	{"D8","RD"},    {"B0","SVC"},
+	{"3C","J"},		{"AC","RMO"},   {"E0","TD"},
+	{"30","JEQ"},	{"4C","RSUB"},  {"F8","TIO"},
+	{"34","JGT"},	{"A4","SHIFTL"},{"2C","TIX"},
+	{"38","JLT"},	{"A8","SHIFTR"},{"B8","TIXR"},
+	{"48","JSUB"},	{"F0","SIO"},   {"DC","WD"},
+	{"00","LDA"},	{"EC","SSK"}
 };
 
-struct Format{
-	int type;
-	int address;
-	string label;
-	string mnemonics;
-	int operandAddress;
-	int opCode;
+map<string, int>  formatType= {
+	{"18",3},	{"68",3},	{"0C",3},
+	{"58",3},	{"50",3},	{"78",3}, 
+	{"90",2},	{"70",3},   {"54",3},
+	{"4O",3},	{"08",3},   {"80",3},
+	{"B4",2},	{"6C",3},   {"D4",3},
+	{"28",3},	{"74",3},   {"14",3},
+	{"88",3},	{"04",3},   {"7C",3},
+	{"A0",2},	{"D0",3},   {"E8",3},
+	{"24",1},	{"20",3},   {"84",3},
+	{"64",1},	{"60",3},	{"10",3},
+	{"9C",1},	{"98",2},	{"1C",3},
+	{"C4",3},	{"C8",1},	{"5C",3},
+	{"C0",3},	{"44",3},   {"94",2},
+	{"F4",3},	{"D8",3},   {"B0",2},
+	{"3C",3},	{"AC",2},   {"E0",3},
+	{"30",3},	{"4C",3},	{"F8",1},
+	{"34",3},	{"A4",2},	{"2C",3},
+	{"38",3},	{"A8",2},	{"B8",2},
+	{"48",3},	{"F0",1},   {"DC",3},
+	{"00",3},	{"EC",3}
 };
 
-/* Function Prototype Declarations for input.cpp*/
-void read_obj_file(int argc, char **argv);
+
 void read_sym_file(int argc, char **argv);
 void insert_symbols(string  line);
 /* Function Prototype Declarations for header_record.cpp*/
