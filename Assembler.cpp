@@ -28,6 +28,23 @@ void Assembler::addInstruction(int type, string address, string label, string mn
     lineMap[address] = newAssemblyLine;
     size++;
 }
+/**
+ * addSymbol adds a symbol/label to our symbol table
+ * @param symbol The symbol/label from that address
+ * @param address The address we need to put that symbol/address
+ */
+void Assembler::addSymbol(string symbol, string address){
+    symbolTable[address] = symbol;
+}
+
+/**
+ * addLiteral adds a literal to our literal table
+ * @param literal The literal from that address
+ * @param address The address we need to put that literal
+ */
+void Assembler::addLiteral(string literal, string address){
+    literalTable[address] = literal;
+}
 
 /**
  * addHeader will add the first line in our assembly code
@@ -36,6 +53,7 @@ void Assembler::addInstruction(int type, string address, string label, string mn
 void Assembler::addHeader(string header){
 
 }
+
 /**
  * addFormat1 will will add an instruction line of SIC/XE Format 1
  * Just here for fun, if its too complicated we will remove
@@ -59,9 +77,9 @@ void Assembler::addFormat2(string opCode){
 	string r1(opCode,2,3);      // Third byte will be r1
 	string r2(opCode,3,4);      // Fourth byte will be r2
 	string address(getNextAddress());   // Get next address for the new line
-	string label = " ";                 // Label which will be added after the second pass
+	string label = getLabel(address);   // Label for this address
 	string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
-	string operandAddress = " ";        // Operand Address which will be a label
+	string operandAddress = " "; // Operand Address which will be a label
     addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
 }
 
@@ -80,7 +98,7 @@ void Assembler::addFormat3(string opCode){
  * @param opCode The 4 byte length opcode
  */
 void Assembler::addFormat4(string opCode){
-	int TYPE =4;
+
 }
 
 /**
@@ -131,13 +149,33 @@ void Assembler::changeOperandAddress(string address, string newOperandAddress){
 }
 
 /**
- * addLabel will add the label to our instructions from our label table
- * in our second pass.
+ * getLabel will get the label for the address that is passed. It will do this
+ * by searching the symbol table for that address if any, else the label will
+ * just be a blank space.
  * @param address   The address where we are going to add the label
- * @param newLabel  The label to be added to the instruction
+ * @return label    The string label for the passed address
  */
-void Assembler::addLabel(string address, string newLabel){
+string Assembler::getLabel(string address){
+    string label(" ");
+    if(symbolTable.count(address)){
+        label = symbolTable.at(address);
+    }
+    return label;
+}
 
+/**
+ * getLiteral will get the literal for the address that is passed. It will do this
+ * by searching the literal table for that address if any, else the literal will
+ * just be a blank space.
+ * @param address   The address where we are going to add the literal
+ * @return label    The string literal for the passed address
+ */
+string Assembler::getLiteral(string address) {
+    string literal(" ");
+    if(literalTable.count(address)){
+        literal = literalTable.at(address);
+    }
+    return literal;
 }
 
 /**
