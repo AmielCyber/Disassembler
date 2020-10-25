@@ -6,7 +6,7 @@ using namespace std;
 #include <string>
 #include <map>
 
-struct AssemblyLine{
+struct InstructionLine{
     int type;
     string address;
     string label;
@@ -17,26 +17,26 @@ struct AssemblyLine{
 
 class Assembler{
 	private:
-		vector<AssemblyLine> line;
-		map<string, AssemblyLine> lineMap;
+		vector<InstructionLine> line;
+		map<string, InstructionLine> lineMap;
 		int size;
 		string getNextAddress();
-		void addAssemblyLine(int type, string address, string label, string mnemonic,
-				string operandAddress, string opCode);
+		void addInstruction(int type, string address, string label, string mnemonic,
+                            string operandAddress, string opCode);
 	public:
 		Assembler();
 		void addHeader(string header);
-		void addEnd(string end);
 		void addFormat1(string opCode);
 		void addFormat2(string opCode);
 		void addFormat3(string opCode);
 		void addFormat4(string opCode);
+        void addEnd(string end);
 		int getFormatType(string op);
 		string getMnemonic(string op);
 		void changeOperandAddress(string address, string newOperandAddress);
-		void changeLabel(string address, string newLabel);
-        AssemblyLine getLine(string address);
-        AssemblyLine getLine(int position);
+		void addLabel(string address, string newLabel);
+        InstructionLine getInstruction(string address);
+        InstructionLine getInstruction(int position);
 		void printAssembler();
 		
 };
