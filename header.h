@@ -1,8 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
-#include <string>
-#include <iostream>
-#include <stdio.h>
+#include <string>		// To use the string object class
+#include <iostream>		// To use cout and cin object
+#include <stdio.h>		// To use standard input and output object
 using namespace std;
 
 /* Valid Op codes */
@@ -32,6 +32,15 @@ const static string mnemonics[] = {
 "TD", "TIO", "TIX", "TIXR", "WD"
 };
 
+struct Format{
+	int type;
+	int address;
+	string label;
+	string mnemonics;
+	int operandAddress;
+	int opCode;
+};
+
 /* Function Prototype Declarations for input.cpp*/
 void read_obj_file(int argc, char **argv);
 void read_sym_file(int argc, char **argv);
@@ -41,6 +50,11 @@ void parse_header_line(string line);
 /* Function Prototype Declarations for text_record.cpp*/
 void process_text_line(string line);
 void process_obj_code(int byte_length, string op_code);
+void format_1(string opCode);
+void format_2(string opCode);
+void format_3(string opCode);
+void format_4(string opCode);
+
 bool validate_obj_code(string op_code);
 /* Function Prototype Declarations for mod_rec.cpp*/
 void parse_mod_line(string line);
