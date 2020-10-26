@@ -5,6 +5,7 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     Assembler assembler;        // assembler object
     // Format 2 example
+    assembler.addSymbol("FIRST","0000");    // add label
     assembler.addFormat2("1834");   // ADD B,S no memory reference
     InstructionLine lineOne = assembler.getInstruction(0);
     cout << "address: "<< lineOne.address << endl;
