@@ -2,10 +2,10 @@
 #include "header.h"
 
 Assembler::Assembler(){
-	size = 0;
+    size = 0;
 }
 string Assembler::getNextAddress(){
-	return "";
+    return "0000";
 }
 /**
  * INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE
@@ -15,9 +15,9 @@ string Assembler::getNextAddress(){
  * @return
  */
 string Assembler::getFormat2Labels(string mnemonic, string r1, string r2) {
-    string operandLabel;
-    string str_r1;
-    string str_r2;
+    string operandLabel = " ";
+    string str_r1 = "R1";
+    string str_r2 = "R2";
     string n;
     if(mnemonic == "SVC"){
         // turn n value into a decimal value
@@ -28,8 +28,12 @@ string Assembler::getFormat2Labels(string mnemonic, string r1, string r2) {
         str_r1 = SIC_XE_RegisterMap.at(r1);
         operandLabel = str_r1;
     }else{
-        str_r1 = SIC_XE_RegisterMap.at(r1);
-        str_r2 = SIC_XE_RegisterMap.at(r2);
+        if(SIC_XE_RegisterMap.count(r1)){
+            str_r1 = SIC_XE_RegisterMap.at(r1);
+        }
+        if(SIC_XE_RegisterMap.count(r2)){
+            str_r2 = SIC_XE_RegisterMap.at(r2);
+        }
         operandLabel = str_r1 + "," + str_r2;
     }
     return operandLabel;
@@ -90,7 +94,7 @@ void Assembler::addHeader(string header){
 void Assembler::addFormat1(string opCode){
 
 
-		
+
 }
 
 /**
@@ -100,14 +104,14 @@ void Assembler::addFormat1(string opCode){
 void Assembler::addFormat2(string opCode){
     int TYPE = 2;
 
-	string op(opCode,0,2);      // Get first byte
-	string r1(opCode,2,3);      // Third byte will be r1
-	string r2(opCode,3,4);      // Fourth byte will be r2
-	string address(getNextAddress());   // Get next address for the new line
-	string label = getLabel(address);   // Label for this address
-	string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
+    string op(opCode,0,2);      // Get first byte
+    string r1(opCode,2,1);      // Third byte will be r1
+    string r2(opCode,3,1);      // Fourth byte will be r2
+    string address(getNextAddress());   // Get next address for the new line
+    string label = getLabel(address);   // Label for this address
+    string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
     // Operand Address which will be a label
-	string operandAddress = getFormat2Labels(mnemonic,r1, r2);
+    string operandAddress = getFormat2Labels(mnemonic,r1, r2);
     addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
 }
 
@@ -144,11 +148,11 @@ void Assembler::addEnd(string end){
  * @return The integer format type of the opcode (1-4) or 0 if no opcode is found
  */
 int Assembler::getFormatType(string op){
-	int formatType= 0;	// Default if not found
-	if(formatTypeMap.count(op)){
-		formatType = formatTypeMap.at(op);
-	}
-	return formatType;
+    int formatType= 0;	// Default if not found
+    if(formatTypeMap.count(op)){
+        formatType = formatTypeMap.at(op);
+    }
+    return formatType;
 
 }
 
@@ -159,11 +163,11 @@ int Assembler::getFormatType(string op){
  * @return The mnemonic operation string
  */
 string Assembler::getMnemonic(string op){
-	string mnemonic = "";
-	if (mnemonicMap.count(op)){
-		mnemonic = mnemonicMap.at(op);
-	}
-	return mnemonic;
+    string mnemonic = "";
+    if (mnemonicMap.count(op)){
+        mnemonic = mnemonicMap.at(op);
+    }
+    return mnemonic;
 }
 
 /**
