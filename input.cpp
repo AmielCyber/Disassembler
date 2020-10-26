@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <iterator>
 
 void read_sym_file(int argc, char **argv)
 { 
