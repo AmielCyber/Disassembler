@@ -1,33 +1,73 @@
 #include "Assembler.h"
 #include "header.h"
+#include <sstream>
 
-Assembler::Assembler(){
+Assembler::Assembler(string startingAddress){
     size = 0;
+    PC_Counter = startingAddress;
 }
 string Assembler::getNextAddress(){
-    return "0000";
+    return PC_Counter;
+}
+void Assembler::incrementPC_Counter(int formatType){
+    int integerAddress;             // Our Address but in decimal form
+    // Get PC_Counter hex value and turn it into an integer and store in integerAddress
+    istringstream(PC_Counter) >> dec >> integerAddress;
+    integerAddress += formatType;   // Increment the PC_Counter in decimal form
+
+    string strPC_Counter = to_string(integerAddress); // Set the new PC_Counter in hex
+    // Check to see if we need to add extra zeros and add the new PC counter in our variable
+    switch (strPC_Counter.length()) {
+        case 1:
+            PC_Counter = "000" + strPC_Counter;
+            break;
+        case 2:
+            PC_Counter = "00" + strPC_Counter;
+            break;
+        case 3:
+            PC_Counter = "0" + strPC_Counter;
+            break;
+        default:
+            PC_Counter = strPC_Counter;
+    }
 }
 /**
- * INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE INCOMPLETE
- * @param mnemonic
- * @param r1
- * @param r2
- * @return
+ * getFormat2Labels will get the values or the form from the instruction
+ * mnemonic. Like the following forms: r1,r2 or r1,n or r1 or n
+ * @param mnemonic  The instruction mnemonic
+ * @param r1        The r1 nibble of our format 2
+ * @param r2        The r2 nibble of our format 2
+ * @return          A string containing the label for a format2 instruction
  */
 string Assembler::getFormat2Labels(string mnemonic, string r1, string r2) {
     string operandLabel = " ";
     string str_r1 = "R1";
     string str_r2 = "R2";
     string n;
+
     if(mnemonic == "SVC"){
+        // SVC n
         // turn n value into a decimal value
+        int n;
+        istringstream(r1) >> dec >> n;
+        n++;
+        operandLabel = to_string(n);
     }else if (mnemonic == "SHIFTL" || mnemonic == "SHIFTR"){
-        str_r1 = SIC_XE_RegisterMap.at(r1);
+        // SHIFTL r1,n or SHIFTR r1,n
+        if(SIC_XE_RegisterMap.count(r1)){
+            str_r1 = SIC_XE_RegisterMap.at(r1);
+        }
         // turn n value into a decimal value
+        int n;
+        istringstream(r2) >> dec >> n;
+        n++;
+        operandLabel = str_r1 + "," + to_string(n);
     }else if (mnemonic == "CLEAR" || mnemonic == "TIXR"){
+        // CLEAR r1 or TIXR r1
         str_r1 = SIC_XE_RegisterMap.at(r1);
         operandLabel = str_r1;
     }else{
+        // ADDD r1,r2
         if(SIC_XE_RegisterMap.count(r1)){
             str_r1 = SIC_XE_RegisterMap.at(r1);
         }
@@ -78,14 +118,6 @@ void Assembler::addLiteral(string literal, string address){
 }
 
 /**
- * addHeader will add the first line in our assembly code
- * @param header
- */
-void Assembler::addHeader(string header){
-
-}
-
-/**
  * addFormat1 will will add an instruction line of SIC/XE Format 1
  * Just here for fun, if its too complicated we will remove
  * @param opCode The 1 byte opcode
@@ -112,10 +144,13 @@ void Assembler::addFormat2(string opCode){
     string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
     // Operand Address which will be a label
     string operandAddress = getFormat2Labels(mnemonic,r1, r2);
+    // Add instruction line
     addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
+    incrementPC_Counter(TYPE);          // Increment PC counter
 }
 
 /**
+ * NOT FUNCTIONAL JUST FOR DEBUGGING FOR NOW
  * addFormat3 will will add an instruction line of SIC/XE Format 3 to our assembly code
  * This function will be call for a format 4 also, where it will determine when we
  * check the e bit and if it is then this function will just call addFormat4 function
@@ -123,37 +158,76 @@ void Assembler::addFormat2(string opCode){
  */
 void Assembler::addFormat3(string opCode){
     int TYPE = 3;
+
+    string address = getNextAddress();
+    string op(opCode,0,2);
+    op = getOP_Code(op);
+    string mnemonic = getMnemonic(op);
+    /**********NEEDS TO BE IMPLEMENTED TO BE FUNCTIONAL***********************/
+    string label = " ";
+    string operandAddress = " ";
+    addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
+    incrementPC_Counter(TYPE);          // Increment PC counter
 }
 
 /**
+ * NOT FUNCTIONAL JUST FOR DEBUGGING FOR NOW
  * addFormat4 will will add an instruction line of SIC/XE Format 4
  * @param opCode The 4 byte length opcode
  */
 void Assembler::addFormat4(string opCode){
     int TYPE = 4;
+
+
+    string address = getNextAddress();
+    string op(opCode,0,2);
+    op = getOP_Code(op);
+    string mnemonic = getMnemonic(op);
+    /**********NEEDS TO BE IMPLEMENTED TO BE FUNCTIONAL***********************/
+    string label = " ";
+    string operandAddress = " ";
+    addInstruction(TYPE,address,label,mnemonic,operandAddress,opCode);
+    incrementPC_Counter(TYPE);          // Increment PC counter
 }
 
-/**
- * addEnd will add the last line in our assembly code
- * @param end
- */
-void Assembler::addEnd(string end){
 
-}
 
 /**
  * getFormatType will look on our map given the key is the opcode and
  * the value returned is the format type number
- * @param op The two hex values of the opcode
+ * @param threeNibbles The three hex values of the opcode
  * @return The integer format type of the opcode (1-4) or 0 if no opcode is found
  */
-int Assembler::getFormatType(string op){
+int Assembler::getFormatType(string threeNibbles){
     int formatType= 0;	// Default if not found
-    if(formatTypeMap.count(op)){
-        formatType = formatTypeMap.at(op);
+    string opCode(threeNibbles,0,2);
+    opCode = getOP_Code(opCode);
+    if(formatTypeMap.count(opCode)){
+        formatType = formatTypeMap.at(opCode);
+    }
+    else{
+        cout << "Invalid opCode found: "<< opCode<<endl;
+        cout<< "Now exiting..."<<endl;
+        system("exit");
+    }
+    // Check if its a type 3 or type 4
+    if(formatType == 3){
+        int decimalVal;
+        // Turn the second nibble into a decimal value
+        string thirdNibble(threeNibbles,2,1);
+        istringstream(thirdNibble) >> dec >> decimalVal;
+        if(decimalVal % 2 == 1){
+            // If the second nibble is odd then it is format 4, hence by the e bit at the end
+            formatType = 4;
+        }
     }
     return formatType;
 
+}
+
+string Assembler::getOP_Code(string byte) {
+    string opCode = getOP(byte);
+    return opCode;
 }
 
 /**
@@ -170,15 +244,7 @@ string Assembler::getMnemonic(string op){
     return mnemonic;
 }
 
-/**
- * changeOperandAddress is used when we need to modify an address which
- * will be in our second pass where we have the locations of our labels
- * @param address The address to be modified
- * @param newOperandAddress The new modified address
- */
-void Assembler::changeOperandAddress(string address, string newOperandAddress){
 
-}
 
 /**
  * getLabel will get the label for the address that is passed. It will do this
@@ -242,6 +308,31 @@ struct InstructionLine Assembler::getInstruction(int position){
     return instruction;
 }
 
+/**
+ * addHeader will add the first line in our assembly code
+ * @param header
+ */
+void Assembler::addHeader(string header){
+
+}
+
+/**
+ * addEnd will add the last line in our assembly code
+ * @param end
+ */
+void Assembler::addEnd(string end){
+
+}
+
+/**
+ * changeOperandAddress is used when we need to modify an address which
+ * will be in our second pass where we have the locations of our labels
+ * @param address The address to be modified
+ * @param newOperandAddress The new modified address
+ */
+void Assembler::changeOperandAddress(string address, string newOperandAddress){
+
+}
 
 void Assembler::printAssembler(){
 

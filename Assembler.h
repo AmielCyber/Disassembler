@@ -21,13 +21,15 @@ private:
     map<string, InstructionLine> lineMap;
     map<string,string> symbolTable;
     map<string,string> literalTable;
-    int size;
     string getNextAddress();
     string getFormat2Labels(string mnemonic, string r1, string r2);
     void addInstruction(int type, string address, string label, string mnemonic,
                         string operandAddress, string opCode);
+    void incrementPC_Counter(int formatType);
+    int size;
+    string PC_Counter;
 public:
-    Assembler();
+    Assembler(string startingAddress);
     void addSymbol(string symbol, string address);
     void addLiteral(string literal, string address);
     void addHeader(string header);
@@ -36,7 +38,8 @@ public:
     void addFormat3(string opCode);
     void addFormat4(string opCode);
     void addEnd(string end);
-    int getFormatType(string op);
+    int getFormatType(string byte);
+    string getOP_Code(string byte);
     string getMnemonic(string op);
     void changeOperandAddress(string address, string newOperandAddress);
     string getLabel(string address);
