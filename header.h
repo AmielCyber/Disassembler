@@ -6,8 +6,11 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include "Disassembler.h"
 
 using namespace std;
+
+
 
 static map<string,  string> mnemonicMap = {
         {"18","ADD"},	    {"68","LDB"},   {"0C","STA"},
