@@ -1,5 +1,5 @@
-#ifndef ASSEMBLER_H
-#define ASSEMBLER_H
+#ifndef DISASSEMBLER_H
+#define DISASSEMBLER_H
 
 using namespace std;
 #include <vector>
@@ -15,21 +15,27 @@ struct InstructionLine{
     string opCode;
 };
 
-class Assembler{
+class Disassembler{
 private:
+    int size;
+    string PC_Counter;
     vector<InstructionLine> line;
     map<string, InstructionLine> lineMap;
     map<string,string> symbolTable;
     map<string,string> literalTable;
-    string getNextAddress();
-    string getFormat2Labels(string mnemonic, string r1, string r2);
+    map<string, string> registerTable;
+    string getPC();
+    string getRegisterValue(string regi);
+    string getOP_Code(string byte);
+    string getNIXBPE(string twoBytes);
+    void incrementPC(int numOfBytes);
     void addInstruction(int type, string address, string label, string mnemonic,
                         string operandAddress, string opCode);
-    void incrementPC_Counter(int formatType);
-    int size;
-    string PC_Counter;
+    string getOperandAddress2(string mnemonic, string r1, string r2);
+    string getOperandAddress3(string nixbpe, string disp);
+
 public:
-    Assembler(string startingAddress);
+    Disassembler(string startingAddress);
     void addSymbol(string symbol, string address);
     void addLiteral(string literal, string address);
     void addHeader(string header);
@@ -39,7 +45,6 @@ public:
     void addFormat4(string opCode);
     void addEnd(string end);
     int getFormatType(string byte);
-    string getOP_Code(string byte);
     string getMnemonic(string op);
     void changeOperandAddress(string address, string newOperandAddress);
     string getLabel(string address);
@@ -50,4 +55,4 @@ public:
 
 };
 
-#endif // ! ASSEMBLER_H
+#endif // ! DISASSEMBLER_H

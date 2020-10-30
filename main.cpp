@@ -1,10 +1,10 @@
 #include <iostream>
 #include <sstream>
 #include "header.h"
-#include "Assembler.h"
+#include "Disassembler.h"
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    Assembler assembler("0000");        // assembler object
+
+    Disassembler assembler("0000");        // assembler object
     // Format 2 example
     assembler.addSymbol("FIRST","0000");    // add label
     assembler.addFormat2("1834");   // ADD B,S no memory reference
@@ -14,7 +14,6 @@ int main() {
     cout << "Mnemonic: " << lineOne.mnemonic << endl;
     cout << "Operand Address: " << lineOne.operandAddress << endl;
     cout << "Opcode: " << lineOne.opCode << endl;
-    std::cout << "Hello, World!" << std::endl;
 
     stringstream str;
     str << dec << "A";
