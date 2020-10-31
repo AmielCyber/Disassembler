@@ -143,18 +143,20 @@ static string getOP(string op){
     return opCode;
 }
 
+
+
 void read_sym_file(int argc, char **argv);
 void insert_symbols(string  line);
 /* Function Prototype Declarations for header_record.cpp*/
 void parse_header_line(string line);
 /* Function Prototype Declarations for text_record.cpp*/
-void process_text_line(string line);
-void process_obj_code(int byte_length, string op_code);
-void format_1(string opCode);
-void format_2(string opCode);
-void format_3(string opCode);
-void format_4(string opCode);
-bool validate_obj_code(string op_code);
+static void processTextLine(string line,Disassembler *disassembler);
+void processObjectCode(int byte_length, string op_code);
+void format1(string opCode);
+void format2(string opCode);
+void format3(string opCode);
+void format4(string opCode);
+bool validateObjCode(string op_code);
 /* Function Prototype Declarations for mod_rec.cpp*/
 void parse_mod_line(string line);
 void modify_address(int add_loc);

@@ -2,7 +2,21 @@
 #include <sstream>
 #include "header.h"
 #include "Disassembler.h"
+#include "textRecord.h"
+
 int main() {
+
+    Disassembler disassembler3("0000");
+    processTextLine("T0010001E141033",&disassembler3);
+    InstructionLine lineZero = disassembler3.getInstruction(0);
+    cout << "Format Type: " << lineZero.type << endl;
+    cout << "address: "<< lineZero.address << endl;
+    cout << "Label: "<< lineZero.label << endl;
+    cout << "Mnemonic: " << lineZero.mnemonic << endl;
+    cout << "Operand Address: " << lineZero.operandAddress << endl;
+    cout << "Opcode: " << lineZero.opCode << endl;
+
+
 
     Disassembler disassembler2("0000");        // assembler object
     // Format 2 example
