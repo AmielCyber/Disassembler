@@ -32,7 +32,7 @@ private:
     void addInstruction(int type, string address, string label, string mnemonic,
                         string operandAddress, string opCode);
     string getOperandAddress2(string mnemonic, string r1, string r2);
-    string getOperandAddress3(string nixbpe, string disp);
+    string getOperandAddress3_4(string nixbpe, string disp);
 
 public:
     Disassembler(string startingAddress);

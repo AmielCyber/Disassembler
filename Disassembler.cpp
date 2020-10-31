@@ -169,13 +169,13 @@ string Disassembler::getOperandAddress2(string mnemonic, string r1, string r2) {
 }
 
 /**
- * getOperandAddress3 gets the operand address for this fromat type
+ * getOperandAddress3_4 gets the operand address for this fromat type
  * Examples: m or c or c,X or m,X
  * @param nixbpe    binary representation of nixbpe
  * @param disp      the displacement or address made of 4 nibbles
  * @return          string operand Address label
  */
-string Disassembler::getOperandAddress3(string nixbpe, string disp) {
+string Disassembler::getOperandAddress3_4(string nixbpe, string disp) {
     string label("");
     string ONE = "1";
     string THREE_ZEROS = "000";
@@ -196,13 +196,14 @@ string Disassembler::getOperandAddress3(string nixbpe, string disp) {
     }
 
     // If we are using a constant (b=p=e=0)
-    if (nixbpe.compare(4, 3, THREE_ZEROS)) {
+    if (nixbpe.compare(3, 3, THREE_ZEROS) == 0) {
         label.append(to_string(targetAddress)); // c : constant value
         if (index) {
             // If the index bit is turned on then : c,X
             label.append(",X");
         }
-    } else {
+    }
+    else {
         if (index) {
             // If the index bit is turned on then : m,X
             // disp + X
@@ -283,7 +284,6 @@ void Disassembler::addFormat2(string opCode) {
 }
 
 /**
- * NOT FUNCTIONAL JUST FOR DEBUGGING FOR NOW
  * addFormat3 will will add an instruction line of SIC/XE Format 3 to our assembly code
  * This function will be call for a format 4 also, where it will determine when we
  * check the e bit and if it is then this function will just call addFormat4 function
@@ -297,37 +297,36 @@ void Disassembler::addFormat3(string opCode) {
     string op(opCode, 0, 2);
     op = getOP_Code(op);
     string mnemonic = getMnemonic(op);
-    /**********NEEDS TO BE IMPLEMENTED TO BE FUNCTIONAL***********************/
-    string nixbpe(opCode, 1, 2);  // Initialize to the first 2 bytes
+    string nixbpe(opCode, 1, 2);  // Initialize to the first 2 nibbles
     nixbpe = getNIXBPE(nixbpe);         // Trim out the op part and get nixbpe values in binary
-    string disp(opCode, 3, 3);    // Initialize to the last 3 bytes (disp)
+    string disp(opCode, 3, 3);    // Initialize to the last 3 nibbles (disp)
 
-    string operandAddress = getOperandAddress3(nixbpe, disp);
+    string operandAddress = getOperandAddress3_4(nixbpe, disp);
     addInstruction(TYPE, address, label, mnemonic, operandAddress, opCode);
     incrementPC(TYPE);          // Increment PC counter
 }
 
 /**
- * NOT FUNCTIONAL JUST FOR DEBUGGING FOR NOW
+ *
  * addFormat4 will will add an instruction line of SIC/XE Format 4
  * @param opCode The 4 byte length opcode
  */
 void Disassembler::addFormat4(string opCode) {
     int TYPE = 4;
 
-
     string address = getPC();
+    string label = getLabel(address);
     string op(opCode, 0, 2);
-    op = "+" + getOP_Code(op);          // Add format 4 notation
-    string mnemonic = getMnemonic(op);
-    /**********NEEDS TO BE IMPLEMENTED TO BE FUNCTIONAL***********************/
+    op = getOP_Code(op);          // Add format 4 notation
+    string mnemonic = "+" + getMnemonic(op);
     string nixbpe(opCode, 1, 2);  // Initialize to the first 2 bytes
     nixbpe = getNIXBPE(nixbpe);         // Trim out the op part and get nixbpe values in binary
+    string disp(opCode, 3, 5);    // Initialize to the last 5 nibbles (disp)
 
-    string label = " ";
-    string operandAddress = " ";
+    string operandAddress = getOperandAddress3_4(nixbpe, disp);
     addInstruction(TYPE, address, label, mnemonic, operandAddress, opCode);
     incrementPC(TYPE);          // Increment PC counter
+
 }
 
 /**
