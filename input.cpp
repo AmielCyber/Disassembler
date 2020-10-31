@@ -18,7 +18,7 @@ void read_sym_file(int argc, char **argv)
         if(tokens.size() == 0) {
             isSym = false;
             continue;
-        } else if(tokens[0] == "Name" || tokens[0] == "Sybmbol") {
+        } else if(tokens[0] == "Name" || tokens[0] == "Symbol") {
             continue;
         }
 
