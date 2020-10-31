@@ -1,6 +1,3 @@
-//
-// Created by namiel on 10/30/20.
-//
 #include "header.h"
 #ifndef TEXTRECORD_H
 #define TEXTRECORD_H
@@ -38,4 +35,4 @@ static void processTextLine(string line,Disassembler *disassembler){
     }
 }
 
-#endif //DISASSEMBLER__TEXTRECORD_H
+#endif // !TEXTRECORD_H
