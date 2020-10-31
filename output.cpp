@@ -2,6 +2,26 @@
 #include <fstream>
 #include <vector>
 
+
+
+/*
+ * Iterate through InstructionLine and find out what to write to file
+ * 
+ */
+void print_table(vector<InstructionLine> line)
+{
+    vector<InstructionLine> output;
+    for(InstructionLine instruct: line)
+    {
+        printLine(instruct.address, width);
+        printLine(instruct.label, width);
+        printLine(instruct.mnemonic, width);
+        printLine(instruct.operandAddress, width);
+        printLine(instruct.opCode, width);
+        cout << endl;
+    }
+}
+
 /*
  *Template function to help format printing out instruction lines
  */
@@ -11,32 +31,14 @@ const int width = 8;
 
 template<string> void printLine(string s, const int& width)
 {
-    cout << left << setw(width) << setfill(space) << s;
+    file << left << setw(width) << setfill(space) << s;
 }
 
 /*
- * Iterate through InstructionLine and find out what to write to file
- * 
+ * create the output file and print the table of instructions
  */
-void print_table(vector<InstructionLine> line)
+void write_file(string fileName)
 {
-    for(int i = 0; i < line.size(); i++)
-    {
-        string myAddress = line.address;
-        string myLabel = line.label;
-        string myMnemonic = line.mnemonic;
-        string myOperandAddress = line.operandAddress;
-        string myOpCode = line.opCode;
-
-        printLine(myAddress, width);
-        printLine(myLabel, width);
-        printLine(myMnemonic, width);
-        printLine(myOperandAddress, width);
-        printLine(myOpCode, width);
-        cout << endl
-    }
-}
-void write_file()
-{
-
+    std::ofstream file(fileName);
+    print_table();
 }
