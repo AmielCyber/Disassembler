@@ -2,14 +2,15 @@
 #include "header.h"
 #include <sstream>
 
-/*
- * Instantiate our class
+/**
+ * Disassembler instantiates our class with a starting address
+ * @param startingAddress
  */
 Disassembler::Disassembler(string startingAddress) {
     size = 0;
     PC_Counter = startingAddress;
-    registerTable["X"] = "0000";
-    registerTable["B"] = "0000";
+    registerTable["X"] = 0;
+    registerTable["B"] = 0;
 }
 
 /**
@@ -22,12 +23,12 @@ string Disassembler::getPC() {
 
 /**
  * getRegisterValue takes in a string of a register and return the value
- * stored in that register in hexadecimal
+ * stored in that register in decimal
  * @param regi register string
  * @return the register value
  */
-string Disassembler::getRegisterValue(string regi) {
-    string value("0000");
+int Disassembler::getRegisterValue(string regi) {
+    int value = 0;
     if (registerTable.count(regi)) {
         value = registerTable.at(regi);
     }
@@ -38,7 +39,7 @@ string Disassembler::getRegisterValue(string regi) {
  * getOP_Code Returns the Opcode for an instruction given the
  * first bytes of an opcode, since we only get the first half
  * of the second nibble. For example: byte= 2E then
- * the second nibble in binary: E = 1110 which will the opcode
+ * the second nibble in binary: E = 1110 which the opcode
  * will be 0010 11 which is 2C
  * @param bytes the first two nibbles of an opcode
  * @return the opcode from those two nibbles
@@ -53,17 +54,17 @@ string Disassembler::getOP_Code(string byte) {
  * off the the first two binary values which are the op values and return the binary
  * value of nixbpe.
  * @param byte which will contain two nibbles containing the nixbpe values
- * @return nixbpe string represented as binary numbers
+ * @return nixbpe string represented as binary numbers in string format
  */
 string Disassembler::getNIXBPE(string byte) {
-    string ni(byte, 0, 1);
-    string xbpe(byte, 1, 1);
+    string ni(byte, 0, 1);      // Get first nibble
+    string xbpe(byte, 1, 1);    // Get second nibble
 
-    ni = hexToBinary(ni);           // Turn ni hex value to binary
-    ni = ni.substr(2, 2);    // Get only the last two binary values
-    xbpe = hexToBinary(xbpe);       // Turn xbpe hex value to binary
+    ni = hexToBinary(ni);               // Turn ni hex value to binary
+    ni = ni.substr(2, 2);       // Get only the last two binary values
+    xbpe = hexToBinary(xbpe);           // Turn xbpe hex value to binary
 
-    return ni + xbpe;               // Return nixbpe in binary form
+    return ni + xbpe;                   // Return nixbpe in binary form
 
 }
 
@@ -75,25 +76,32 @@ string Disassembler::getNIXBPE(string byte) {
  * @param numOfBytes number of bytes to increment program-counter
  */
 void Disassembler::incrementPC(int numOfBytes) {
-    int integerAddress;             // Our Address but in decimal form
+    int integerAddress;                 // Our Address but in decimal form
     // Get PC_Counter hex value and turn it into an integer and store in integerAddress
-    istringstream(PC_Counter) >> dec >> integerAddress;
-    integerAddress += numOfBytes;   // Increment the PC in decimal form
-
-    string strPC_Counter = to_string(integerAddress); // Set the new PC in hex
+    istringstream(PC_Counter) >> hex >> integerAddress;
+    integerAddress += numOfBytes;       // Increment the PC in decimal form
+    // stringstream object to help us us convert int decimals int string hexadecimal
+    stringstream stream;
+    stream << hex << integerAddress;
+    string pcString = stream.str();
     // Check to see if we need to add extra zeros and add the new PC in our variable
-    switch (strPC_Counter.length()) {
+    switch (pcString.length()) {
         case 1:
-            PC_Counter = "000" + strPC_Counter;
+            PC_Counter = "00000" + pcString;
             break;
         case 2:
-            PC_Counter = "00" + strPC_Counter;
+            PC_Counter = "0000" + pcString;
             break;
         case 3:
-            PC_Counter = "0" + strPC_Counter;
+            PC_Counter = "000" + pcString;
             break;
+        case 4:
+            PC_Counter = "00" + pcString;
+            break;
+        case 5:
+            PC_Counter = "0" + pcString;
         default:
-            PC_Counter = strPC_Counter;
+            PC_Counter = pcString;
     }
 }
 
@@ -138,7 +146,7 @@ string Disassembler::getOperandAddress2(string mnemonic, string r1, string r2) {
         // SVC n
         // turn n value into a decimal value
         int n;
-        istringstream(r1) >> dec >> n;
+        istringstream(r1) >> hex >> n;
         n++;
         operandLabel = to_string(n);
     } else if (mnemonic == "SHIFTL" || mnemonic == "SHIFTR") {
@@ -148,7 +156,7 @@ string Disassembler::getOperandAddress2(string mnemonic, string r1, string r2) {
         }
         // turn n value into a decimal value
         int n;
-        istringstream(r2) >> dec >> n;
+        istringstream(r2) >> hex >> n;
         n++;
         operandLabel = str_r1 + "," + to_string(n);
     } else if (mnemonic == "CLEAR" || mnemonic == "TIXR") {
@@ -175,63 +183,75 @@ string Disassembler::getOperandAddress2(string mnemonic, string r1, string r2) {
  * @param disp      the displacement or address made of 4 nibbles
  * @return          string operand Address label
  */
-string Disassembler::getOperandAddress3_4(string nixbpe, string disp) {
-    string label("");
+string Disassembler::getOperandAddress3_4(string nixbpe, string disp, bool loadIndex, bool loadBase) {
+    string operandAddress("");  // the return string
+    string label;               // Label we will get when we get the TA
     string ONE = "1";
+    int MAX_DISPLACEMENT = 2047;// Used to see if we are subtracting from PC
     string THREE_ZEROS = "000";
     int targetAddress;
     bool index = nixbpe.compare(2, 1, ONE) == 0;
     bool base = nixbpe.compare(3, 1, ONE) == 0;
     bool pc = nixbpe.compare(4, 1, ONE) == 0;
-    istringstream(disp) >> dec >> targetAddress;
+    // Get the target address in decimal value integer
+    istringstream(disp) >> hex >> targetAddress;
 
-
-    // Add notation if addressing type is Immediate/Indirect type
+    // Add assembly notation if addressing type is Immediate/Indirect type
     if (nixbpe.compare(0, 2, "10") == 0) {
         // If the addressing type is Indirect (n=1,i=0)
-        label.append("@");
+        operandAddress.append("@");
     } else if (nixbpe.compare(0, 2, "01") == 0) {
         // If the addressing type is Immediate (n=0,i=1)
-        label.append("#");
+        operandAddress.append("#");
     }
 
     // If we are using a constant (b=p=e=0)
     if (nixbpe.compare(3, 3, THREE_ZEROS) == 0) {
-        label.append(to_string(targetAddress)); // c : constant value
-        if (index) {
-            // If the index bit is turned on then : c,X
-            label.append(",X");
-        }
+        operandAddress.append(to_string(targetAddress)); // c : constant value
     }
     else {
         if (index) {
             // If the index bit is turned on then : m,X
             // disp + X
-            label.append(",X");
-            int indexValue;
-            string xValue = getRegisterValue("X");
-            istringstream(xValue) >> dec >> indexValue;
+            int indexValue = getRegisterValue("X");
             targetAddress += indexValue;
         }
         if (base) {
-            // disp + B
-            int baseValue;
-            string bValue = getRegisterValue("B");
-            istringstream(bValue) >> dec >> baseValue;
+            // If the base bit is one then disp + B
+            int baseValue = getRegisterValue("B");
             targetAddress += baseValue;
         }
         if (pc) {
-            // disp + PC
+            // If the PC bit is one then disp + PC
             int pcValue;
-            istringstream(getPC()) >> dec >> pcValue;
+            istringstream(getPC()) >> hex >> pcValue;
+            if(targetAddress > MAX_DISPLACEMENT){
+                // If we have to subtract
+                targetAddress = targetAddress - 4096 ;
+            }
             targetAddress += pcValue;
         }
-        label.append(getLabel(to_string(targetAddress)));
-
+        label = getLabel(targetAddress);
+        if(label == " "){
+            // If we do not get a label then we search for a literal instead
+            label = getLiteral(targetAddress).label;
+        }
+        operandAddress.append(label);   // Append the label or the literal
+    }
+    if(loadIndex){
+        // Load the value of X register if there was an LDX instruction
+        registerTable["X"] = targetAddress;
+    }else if(loadBase){
+        // Load the value of B register if there was an LDB instruction
+        registerTable["B"] = targetAddress;
+        addInstruction(0," "," ","BASE",label," ");
+    }
+    if(index){
+        // Attach the following string if the index bit was on for nixbpe
+        operandAddress.append(",X");
     }
 
-    return label;
-
+    return operandAddress;
 }
 
 /**
@@ -240,7 +260,9 @@ string Disassembler::getOperandAddress3_4(string nixbpe, string disp) {
  * @param address The address we need to put that symbol/address
  */
 void Disassembler::addSymbol(string symbol, string address) {
-    symbolTable[address] = symbol;
+    int decimalValue;
+    istringstream(address) >> hex >> decimalValue;
+    symbolTable[decimalValue] = symbol;
 }
 
 /**
@@ -248,8 +270,11 @@ void Disassembler::addSymbol(string symbol, string address) {
  * @param literal The literal from that address
  * @param address The address we need to put that literal
  */
-void Disassembler::addLiteral(string literal, string address) {
-    literalTable[address] = literal;
+void Disassembler::addLiteral(string literal, int length, string address) {
+    int decimalValue;
+    istringstream(address) >> hex >> decimalValue;
+    Literal literalStruct = {literal, length};
+    literalTable[decimalValue] = literalStruct;
 }
 
 /**
@@ -274,7 +299,9 @@ void Disassembler::addFormat2(string opCode) {
     string r1(opCode, 2, 1);      // Third byte will be r1
     string r2(opCode, 3, 1);      // Fourth byte will be r2
     string address(getPC());            // Get next address for the new line
-    string label = getLabel(address);   // Label for this address
+    int addressDecimal;
+    istringstream(address) >> hex >> addressDecimal;
+    string label = getLabel(addressDecimal);   // Label for this address
     string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
     // Operand Address which will be a label
     string operandAddress = getOperandAddress2(mnemonic, r1, r2);
@@ -284,48 +311,51 @@ void Disassembler::addFormat2(string opCode) {
 }
 
 /**
- * addFormat3 will will add an instruction line of SIC/XE Format 3 to our assembly code
- * This function will be call for a format 4 also, where it will determine when we
- * check the e bit and if it is then this function will just call addFormat4 function
- * @param opCode The 3 byte length opcode
+ * addFormat3_4 will add either a format3/format4 instruction.
+ * @param opCode The opcode for this function
+ * @param type The type of the function either 3 or 4
  */
-void Disassembler::addFormat3(string opCode) {
-    int TYPE = 3;
-
+void Disassembler::addFormat3_4(string opCode, int type) {
     string address = getPC();
-    string label = getLabel(address);
+    incrementPC(type);          // Increment PC counter
+    int addressDecimal;
+    istringstream(address) >> hex >> addressDecimal;
+    string label = getLabel(addressDecimal);
     string op(opCode, 0, 2);
     op = getOP_Code(op);
+    int numOfNibbles;
+
     string mnemonic = getMnemonic(op);
+    bool loadIndex = mnemonic.compare("LDX") ==0;
+    bool loadBase = mnemonic.compare("LDB") == 0;
+    if (type == 4){
+        mnemonic = "+" + getMnemonic(op);
+    }
+    if(type == 3){
+        numOfNibbles = 3;
+    }else{
+        numOfNibbles = 5;
+    }
     string nixbpe(opCode, 1, 2);  // Initialize to the first 2 nibbles
     nixbpe = getNIXBPE(nixbpe);         // Trim out the op part and get nixbpe values in binary
-    string disp(opCode, 3, 3);    // Initialize to the last 3 nibbles (disp)
-
-    string operandAddress = getOperandAddress3_4(nixbpe, disp);
-    addInstruction(TYPE, address, label, mnemonic, operandAddress, opCode);
-    incrementPC(TYPE);          // Increment PC counter
-}
-
-/**
- *
- * addFormat4 will will add an instruction line of SIC/XE Format 4
- * @param opCode The 4 byte length opcode
- */
-void Disassembler::addFormat4(string opCode) {
-    int TYPE = 4;
-
-    string address = getPC();
-    string label = getLabel(address);
-    string op(opCode, 0, 2);
-    op = getOP_Code(op);          // Add format 4 notation
-    string mnemonic = "+" + getMnemonic(op);
-    string nixbpe(opCode, 1, 2);  // Initialize to the first 2 bytes
-    nixbpe = getNIXBPE(nixbpe);         // Trim out the op part and get nixbpe values in binary
-    string disp(opCode, 3, 5);    // Initialize to the last 5 nibbles (disp)
-
-    string operandAddress = getOperandAddress3_4(nixbpe, disp);
-    addInstruction(TYPE, address, label, mnemonic, operandAddress, opCode);
-    incrementPC(TYPE);          // Increment PC counter
+    string disp(opCode, 3, numOfNibbles);    // Initialize to the last number of nibbles (disp)
+    string operandAddress = getOperandAddress3_4(nixbpe, disp, loadIndex, loadBase);
+    if(mnemonic == "RSUB"){
+        // If the instruction is RSUB then the operand address will be empty
+        operandAddress = " ";
+    }
+    InstructionLine baseLine;   // Use to remove and add an Instruction base line
+    if(loadBase){
+        /* Remove the base instruction it was added in the getOperandAddress3_4
+         * function and put the Instruction and then put the base instruction back at the end*/
+        baseLine = line.back();
+        line.pop_back();
+        addInstruction(type, address, label, mnemonic, operandAddress, opCode);
+        line.push_back(baseLine);
+    } else{
+        // If there were no load base instruction
+        addInstruction(type, address, label, mnemonic, operandAddress, opCode);
+    }
 
 }
 
@@ -351,7 +381,7 @@ int Disassembler::getFormatType(string threeNibbles) {
         int decimalVal;
         // Turn the second nibble into a decimal value
         string thirdNibble(threeNibbles, 2, 1);
-        istringstream(thirdNibble) >> dec >> decimalVal;
+        istringstream(thirdNibble) >> hex >> decimalVal;
         if (decimalVal % 2 == 1) {
             // If the second nibble is odd then it is format 4, hence by the e bit at the end
             formatType = 4;
@@ -379,10 +409,10 @@ string Disassembler::getMnemonic(string op) {
  * getLabel will get the label for the address that is passed. It will do this
  * by searching the symbol table for that address if any, else the label will
  * just be a blank space.
- * @param address   The address where we are going to add the label
- * @return label    The string label for the passed address
+ * @param address   The address where we are going to add the label in decimal form
+ * @return label    The string label for the passed address. Returns empty if not found
  */
-string Disassembler::getLabel(string address) {
+string Disassembler::getLabel(int address) {
     string label(" ");
     if (symbolTable.count(address)) {
         label = symbolTable.at(address);
@@ -394,11 +424,11 @@ string Disassembler::getLabel(string address) {
  * getLiteral will get the literal for the address that is passed. It will do this
  * by searching the literal table for that address if any, else the literal will
  * just be a blank space.
- * @param address   The address where we are going to add the literal
- * @return label    The string literal for the passed address
+ * @param address   The address where we are going to add the literal in decimal form
+ * @return literal    The string literal for the passed address. Returns null if not found
  */
-string Disassembler::getLiteral(string address) {
-    string literal(" ");
+Literal Disassembler::getLiteral(int address) {
+    Literal literal;
     if (literalTable.count(address)) {
         literal = literalTable.at(address);
     }
@@ -435,6 +465,82 @@ struct InstructionLine Disassembler::getInstruction(int position) {
     }
     return instruction;
 }
+
+/**
+ * getInstructions will return a vector of all Instructions in the
+ * assembler code.
+ * @return vector of type InstructionLine that will contain all the
+ * instruction lines added to the assembly code.
+ */
+vector<InstructionLine> Disassembler::getInstructions(){
+    return line;
+}
+
+/**
+ * isNextInstructionLiteral will determine if the next address is a literal
+ * since we cant decipher if there is a literal up next from opcode.
+ * @return int positve integer: if the next address/line is a literal
+ * and that integer value will be the size in bytes of that literal.
+ * Returns a zero if the next instruction line is not a literal.
+ */
+int Disassembler::isNextInstructionLiteral() {
+    int programCounter;
+    int sizeOfLiteral = 0;
+    istringstream(getPC()) >> hex >> programCounter;    // Get the PC in integer decimal value
+    if(literalTable.count(programCounter)){
+        sizeOfLiteral = literalTable.at(programCounter).length;
+    }
+    return sizeOfLiteral;
+}
+
+/**
+ * addLiteralInstruction adds a literal instruction to our assembly code.
+ * @param opCode The opcode for the literal instruction
+ */
+void Disassembler::addLiteralInstruction(string opCode) {
+    string operandAdress;
+    bool prevIsLiteral = false; // Used to check if we already have a literal pool
+    int address;
+    string prevAddress = line.back().address;       // Get the last address
+    istringstream(prevAddress) >> hex >> address;   // Convert into decimal
+    prevIsLiteral = literalTable.count(address) > 0;
+    if(!prevIsLiteral){
+        // If there is no literal pool before the current then we add one
+        addInstruction(0, " ", " ", "LTORG", " ", " ");
+    }
+    istringstream(getPC()) >> hex >> address;
+    Literal literal = literalTable.at(address);
+    operandAdress = literal.label;
+    addInstruction(0,getPC(),getLabel(address),"*",operandAdress,opCode);
+    incrementPC(opCode.length()/2);
+}
+
+/**
+ * addSymbolInstructions adds all the reserve words at the end of our assembly code.
+ */
+void Disassembler::addSymbolInstructions() {
+    int address;
+    int lastAddress;
+    int size;
+    string label;
+    map<int, string>::iterator iter;    // Create an iterator
+
+    // Iterate through the symbol table
+    for(iter = symbolTable.begin(); iter != symbolTable.end(); iter++){
+        address = iter->first;
+        label = iter->second;
+        istringstream(line.back().address) >> hex >> lastAddress;
+        if(address > lastAddress){
+            // If the symbol found is not added to the assembly code
+            size = (address - lastAddress) / 3;
+            stringstream stream;
+            stream << hex << address;
+            string addressString = stream.str();
+            addInstruction(0,addressString,label,"RESW",to_string(size)," ");
+        }
+    }
+}
+
 
 /**
  * addHeader will add the first line in our assembly code

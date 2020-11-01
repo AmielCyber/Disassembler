@@ -67,7 +67,7 @@ static map<string,string> SIC_XE_RegisterMap = {
 static string hexToBinary(string hexidecimal){
     int decimalVal;
     string binaryVal;
-    istringstream(hexidecimal) >> dec >> decimalVal;
+    istringstream(hexidecimal) >> hex >> decimalVal;
     switch (decimalVal) {
         case 0:
             binaryVal = "0000";
@@ -127,7 +127,7 @@ static string getOP(string op){
     int decimalVal;
     string firstNibble(op,0,1);
     string secondNibble(op,1,1);
-    istringstream(secondNibble) >> dec >> decimalVal;
+    istringstream(secondNibble) >> hex >> decimalVal;
 
     if(decimalVal > 11){
         secondNibble = "C";
