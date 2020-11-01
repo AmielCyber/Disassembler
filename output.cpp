@@ -17,21 +17,17 @@ template<typename T> void printLine(T t, const int& width)
     cout << left << setw(width) << setfill(space) << t;
 }
 /*
- * Iterate through InstructionLine and find out what to write to file
+ * Print all elements of Instructionline
  * 
  */
-void print_table(vector<InstructionLine> line)
+void print_table(InstructionLine instruct)
 {
-    vector<InstructionLine> output;
-    for(InstructionLine instruct : line)
-    {
-        printLine(instruct.address, width);
-        printLine(instruct.label, width);
-        printLine(instruct.mnemonic, width);
-        printLine(instruct.operandAddress, width);
-        printLine(instruct.opCode, width);
-        cout << endl;
-    }
+    printLine(instruct.address, width);
+    printLine(instruct.label, width);
+    printLine(instruct.mnemonic, width);
+    printLine(instruct.operandAddress, width);
+    printLine(instruct.opCode, width);
+    cout << endl;
 }
 
 
@@ -39,13 +35,15 @@ void print_table(vector<InstructionLine> line)
 /*
  * create the output file and print the table of instructions
  */
-void write_file(string fileName, Disassembler myDisassembler)
+void write_file(Disassembler myDisassembler)
 {
-    std::ofstream file(fileName);
+    std::ofstream file("sample.lis.txt");
+    freopen("sample.lis.txt", "w", stdout);     //redirect cout to write into filename
     for(int i = 0; i < myDisassembler.getSize(); i++)
     {
         print_table(myDisassembler.getInstruction(i));
     }
     
+    file.close();
 }
 
