@@ -52,6 +52,7 @@ public:
     InstructionLine getInstruction(string address);
     InstructionLine getInstruction(int position);
     void printAssembler();
+    int getSize();
 
 };
 

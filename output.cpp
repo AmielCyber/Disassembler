@@ -1,9 +1,21 @@
 #include "header.h"
 #include <fstream>
 #include <vector>
+#include <iostream>
+
+
+const char space = ' ';
+const int width = 8;
+/*
+ *Template function to help format printing out instruction lines
+ */
 
 
 
+template<typename T> void printLine(T t, const int& width)
+{
+    cout << left << setw(width) << setfill(space) << t;
+}
 /*
  * Iterate through InstructionLine and find out what to write to file
  * 
@@ -11,7 +23,7 @@
 void print_table(vector<InstructionLine> line)
 {
     vector<InstructionLine> output;
-    for(InstructionLine instruct: line)
+    for(InstructionLine instruct : line)
     {
         printLine(instruct.address, width);
         printLine(instruct.label, width);
@@ -22,23 +34,18 @@ void print_table(vector<InstructionLine> line)
     }
 }
 
-/*
- *Template function to help format printing out instruction lines
- */
 
-const char space = ' ';
-const int width = 8;
-
-template<string> void printLine(string s, const int& width)
-{
-    file << left << setw(width) << setfill(space) << s;
-}
 
 /*
  * create the output file and print the table of instructions
  */
-void write_file(string fileName)
+void write_file(string fileName, Disassembler myDisassembler)
 {
     std::ofstream file(fileName);
-    print_table();
+    for(int i = 0; i < myDisassembler.getSize(); i++)
+    {
+        print_table(myDisassembler.getInstruction(i));
+    }
+    
 }
+

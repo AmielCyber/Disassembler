@@ -21,6 +21,14 @@ string Disassembler::getPC() {
 }
 
 /**
+ * getSize Gets the size of Disassembler
+ * @return size
+ */
+int Disassembler::getSize() {
+    return size;
+}
+
+/**
  * getRegisterValue takes in a string of a register and return the value
  * stored in that register in hexadecimal
  * @param regi register string
