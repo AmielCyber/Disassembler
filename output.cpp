@@ -1,44 +1,49 @@
 #include "header.h"
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 
-
-/*
- * Iterate through InstructionLine and find out what to write to file
- * 
- */
-void print_table(vector<InstructionLine> line)
-{
-    vector<InstructionLine> output;
-    for(InstructionLine instruct: line)
-    {
-        printLine(instruct.address, width);
-        printLine(instruct.label, width);
-        printLine(instruct.mnemonic, width);
-        printLine(instruct.operandAddress, width);
-        printLine(instruct.opCode, width);
-        cout << endl;
-    }
-}
-
+const char space = ' ';
+const int width = 8;
 /*
  *Template function to help format printing out instruction lines
  */
 
-const char space = ' ';
-const int width = 8;
 
-template<string> void printLine(string s, const int& width)
+
+template<typename T> void printLine(T t, const int& width)
 {
-    file << left << setw(width) << setfill(space) << s;
+    cout << left << setw(width) << setfill(space) << t;
 }
+/*
+ * Print all elements of Instructionline
+ * 
+ */
+void print_table(InstructionLine instruct)
+{
+    printLine(instruct.address, width);
+    printLine(instruct.label, width);
+    printLine(instruct.mnemonic, width);
+    printLine(instruct.operandAddress, width);
+    printLine(instruct.opCode, width);
+    cout << endl;
+}
+
+
 
 /*
  * create the output file and print the table of instructions
  */
-void write_file(string fileName)
+void write_file(Disassembler myDisassembler)
 {
-    std::ofstream file(fileName);
-    print_table();
+    std::ofstream file("sample.lis.txt");
+    freopen("sample.lis.txt", "w", stdout);     //redirect cout to write into filename
+    for(int i = 0; i < myDisassembler.getSize(); i++)
+    {
+        print_table(myDisassembler.getInstruction(i));
+    }
+    
+    file.close();
 }
+

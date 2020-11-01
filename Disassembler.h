@@ -60,6 +60,7 @@ public:
     void addLiteralInstruction(string opCode);
     void addSymbolInstructions();
     void printAssembler();
+    int getSize();
 
 };
 
