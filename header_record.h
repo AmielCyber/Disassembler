@@ -2,7 +2,7 @@
 #ifndef HEADER_RECORD_H
 #define HEADER_RECORD_H
 
-static void parse_header_Line(string line) {
+static Disassembler* parse_header_Line(string line, Disassembler* disassembler) {
 
 //check if the line entered is a header
 	if (line.compare(0, 1, "H") == 0) {
@@ -34,6 +34,8 @@ static void parse_header_Line(string line) {
 		cout << "Invalid line sent to text processor!" << endl;
 		}
 	}
+
+	return disassembler;
 }
 
 #endif 
