@@ -28,6 +28,7 @@ static Disassembler* parse_header_Line(string line) {
 
 			string length = operationLength; //parses the length of the program out
 
+			disassembler.addHeader(mnemonic, startingAddress, length);
 		}
 		else {
 		
