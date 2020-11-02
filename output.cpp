@@ -35,15 +35,15 @@ void print_table(InstructionLine instruct)
 /*
  * create the output file and print the table of instructions
  */
-void write_file(Disassembler myDisassembler)
+void write_file(Disassembler *myDisassembler)
 {
     std::ofstream file("sample.lis.txt");
     freopen("sample.lis.txt", "w", stdout);     //redirect cout to write into filename
-    for(int i = 0; i < myDisassembler.getSize(); i++)
+    for(int i = 0; i < myDisassembler->getSize(); i++)
     {
-        print_table(myDisassembler.getInstruction(i));
+        print_table(myDisassembler->getInstruction(i));
     }
-    
+    myDisassembler->addEnd("0000");
     file.close();
 }
 
