@@ -2,7 +2,7 @@
 #ifndef MOD_RECORD_H
 #define MOD_RECORD_H
 
-static void parse_mod_Line(string line) {
+static Disassembler* parse_mod_Line(string line, Disassembler* disassembler) {
 
 //check if the line entered was a modification record
 	if (line.compare(0, 1, "M") == 0) {
@@ -36,12 +36,13 @@ static void parse_mod_Line(string line) {
 		cout << "Invalid line sent to text processor!" << endl;
 		}
 	}
-
+	return disassembler;
 }
 
-static void modify_address(int add_loc) { //modifys the address
+static Disassembler* modify_address(int add_loc, Disassembler* disassembler) { //modifys the address
 
-	
+	string address = disassembler->address;
+	return disassembler;
 
 }
 

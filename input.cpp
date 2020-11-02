@@ -10,6 +10,7 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 
     if(!file) {
         cout << "Error - Symbol file not found" << endl;
+        exit(EXIT_FAILURE);
     }
 
     std::string str; 
@@ -46,6 +47,7 @@ void read_obj_file(int argc, char **argv) {
 
     if(!file) {
         cout << "Error - No object file found" << endl;
+        exit(EXIT_FAILURE);
     }
 
     std::string str; 
