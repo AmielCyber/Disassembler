@@ -3,47 +3,48 @@
 #ifndef HEADER_RECORD_H
 #define HEADER_RECORD_H
 
-static Disassembler* parse_header_Line(string line) {
+static Disassembler parse_header_Line(string line) {
 
-//check if the line entered is a header
+	//check if the line entered is a header
 
 
 	if (line.compare(0, 1, "H") == 0) {
 		int textLineSize = line.length();               // Get the length of the line.
 
-		
 
-		if (textLineSize == 19) { //checks to make sure the length of the header is valid
-		
 
-			string startingAddress(line, 7, 12);
-			Disassembler disassembler(startingAddress);
-			disassembler.address = startingAddress; //parses the starting address out
+		//if (textLineSize == 19) { //checks to make sure the length of the header is valid
 
-			string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get what type of mnemonic
 
-			disassembler.mnemonic = first6Nibbles; // parses the mnemonic out
+		string startingAddress(line, 7, 12);
+		Disassembler disassembler(startingAddress);
 
-			string operationLength(line, 13, 18);
+		string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get what type of mnemonic
 
-			string length = operationLength; //parses the length of the program out
+		//disassembler.mnemonic = first6Nibbles; // parses the mnemonic out
 
-			disassembler.addHeader(mnemonic, startingAddress, length);
-		}
-		else {
-		
-		cout << "Invalid line sent to text processor!" << endl;
-		return null;
-			}
-		}
+		string operationLength(line, 13, 18);
+
+		string length = operationLength; //parses the length of the program out
+
+		disassembler.addHeader(first6Nibbles, startingAddress, length);
+		return disassembler;
+
 	}
+	//else {
+
+	//cout << "Invalid line sent to text processor!" << endl;
+
+	//}
+//}
+
+
 	else {
 		cout << "Invalid line sent to text processor!" << endl;
-		return null;
-		}
-	}
 
-	return disassembler;
+	}
 }
+
+	
 
 #endif 
