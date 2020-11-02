@@ -2,10 +2,11 @@
 #ifndef TEXTRECORD_H
 #define TEXTRECORD_H
 /**
- * processTextLine will take a text line from the object
- * code file
- * @param line
- * @param disassembler
+ * processTextLine will take a text line from the object code file and
+ * add each instruction found in the opcode.
+ * @param line          The string line of the object file e.g "T......."
+ * @param disassembler  The disassembler object we will be using to store the
+ *                      assembly code instructions.
  */
 static void processTextLine(string line,Disassembler *disassembler){
     // Check if the object code is a text record
@@ -16,6 +17,7 @@ static void processTextLine(string line,Disassembler *disassembler){
         while(textLineSize > 0){
             // Check if next instruction is a literal and if it is get the number of nibbles for the opcode
             int literalSize = disassembler->isNextInstructionLiteral();
+
             int nibbles;
             if(literalSize>0){
                 // If next instruction is a literal then get the opcode and added to the assembly code
@@ -29,25 +31,7 @@ static void processTextLine(string line,Disassembler *disassembler){
                 nibbles = 2 * type;                         // Get number of nibbles = 2 * Bytes
                 string opCode(objCodeLine,0,nibbles);      // Get a chunk of an object code depending on format type
                 // Call disassembler addFormat function to add format opcode line to our assembly code
-                switch (type) {
-                    case 1: // Insert format 1 opcode
-                        disassembler->addFormat1(opCode);
-                        break;
-                    case 2: // Insert format 2 opcode
-                        disassembler->addFormat2(opCode);
-                        break;
-                    case 3: // Insert format 3 opcode
-                        disassembler->addFormat3_4(opCode,type);
-                        break;
-                    case 4: // Insert format 4 opcode
-                        disassembler->addFormat3_4(opCode,type);
-                        break;
-                    default: // Invalid op code entered in object code
-                        cout << "Invalid op code found!" << endl;
-                        cout << "Now exiting..."<<endl;
-                        system("exit");
-                        break;
-                }
+                disassembler->addFormat(opCode,type);
             }
 
             textLineSize -= nibbles;             // Decrease the size of our text record line

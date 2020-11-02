@@ -1,6 +1,5 @@
 #ifndef DISASSEMBLER_H
 #define DISASSEMBLER_H
-
 using namespace std;
 #include <vector>
 #include <string>
@@ -29,7 +28,6 @@ private:
     map<int,string> symbolTable;
     map<int,Literal> literalTable;
     map<string, int> registerTable;
-    string getPC();
     int getRegisterValue(string regi);
     string getOP_Code(string byte);
     string getNIXBPE(string twoBytes);
@@ -41,26 +39,29 @@ private:
 
 public:
     Disassembler(string startingAddress);
+    string getPC();
     void addSymbol(string symbol, string address);
     void addLiteral(string literal, int length, string address);
-    void addHeader(string header);
+    string getMnemonic(string op);
+    string getLabel(int address);
+    Literal getLiteral(int address);
+    vector<InstructionLine> getInstructions();
+    int isNextInstructionLiteral();
+    int getFormatType(string byte);
+    void addFormat(string opCode, int type);
     void addFormat1(string opCode);
     void addFormat2(string opCode);
     void addFormat3_4(string opCode, int type);
-    void addEnd(string end);
-    int getFormatType(string byte);
-    string getMnemonic(string op);
-    void changeOperandAddress(string address, string newOperandAddress);
-    string getLabel(int address);
-    Literal getLiteral(int address);
-    InstructionLine getInstruction(string address);
-    InstructionLine getInstruction(int position);
-    vector<InstructionLine> getInstructions();
-    int isNextInstructionLiteral();
     void addLiteralInstruction(string opCode);
     void addSymbolInstructions();
-    void printAssembler();
+    InstructionLine getInstruction(string address);
+    InstructionLine getInstruction(int position);
+    bool isNextInstructionSymbol();
     int getSize();
+    void addHeader(string header);
+    void addEnd(string end);
+    void changeOperandAddress(string address, string newOperandAddress);
+    void printAssembler();
 
 };
 

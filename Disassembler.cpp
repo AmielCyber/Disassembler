@@ -22,14 +22,6 @@ string Disassembler::getPC() {
 }
 
 /**
- * getSize Gets the size of Disassembler
- * @return size
- */
-int Disassembler::getSize() {
-    return size;
-}
-
-/**
  * getRegisterValue takes in a string of a register and return the value
  * stored in that register in decimal
  * @param regi register string
@@ -285,6 +277,32 @@ void Disassembler::addLiteral(string literal, int length, string address) {
     literalTable[decimalValue] = literalStruct;
 }
 
+void Disassembler::addFormat(string opCode, int type) {
+
+    switch (type) {
+        case 0:
+            break;
+        case 1:
+            addFormat1(opCode);
+            break;
+        case 2:
+            addFormat2(opCode);
+            break;
+        case 3:
+            addFormat3_4(opCode,type);
+            break;
+        case 4:
+            addFormat3_4(opCode,type);
+            break;
+        default:
+            cout << "Invalid op code found!" << endl;
+            cout << "Now exiting..."<<endl;
+            exit(EXIT_FAILURE);
+            break;
+    }
+
+}
+
 /**
  * addFormat1 will will add an instruction line of SIC/XE Format 1
  * Just here for fun, if its too complicated we will remove
@@ -292,6 +310,19 @@ void Disassembler::addLiteral(string literal, int length, string address) {
  * the instruction
  */
 void Disassembler::addFormat1(string opCode) {
+    int TYPE = 1;
+
+    string op(opCode, 0, 2);      // Get first byte
+    string address(getPC());            // Get next address for the new line
+    int addressDecimal;
+    istringstream(address) >> hex >> addressDecimal;
+    string label = getLabel(addressDecimal);   // Label for this address
+    string mnemonic = getMnemonic(op);  // The mnemonic for this instruction
+    // Operand Address which will be a label
+    string operandAddress = " ";
+    // Add instruction line
+    addInstruction(TYPE, address, label, mnemonic, operandAddress, opCode);
+    incrementPC(TYPE);                  // Increment PC counter
 
 
 }
@@ -374,15 +405,16 @@ void Disassembler::addFormat3_4(string opCode, int type) {
  * @return The integer format type of the opcode (1-4) or 0 if no opcode is found.
  */
 int Disassembler::getFormatType(string threeNibbles) {
-    int formatType = 0;    // Default if not found
+    int formatType;    // Default if not found
     string opCode(threeNibbles, 0, 2);
     opCode = getOP_Code(opCode);
-    if (formatTypeMap.count(opCode)) {
+    formatType = formatTypeMap.count(opCode);
+    if (formatType) {
         formatType = formatTypeMap.at(opCode);
     } else {
         cout << "Invalid opCode found: " << opCode << endl;
         cout << "Now exiting..." << endl;
-        system("exit");
+        exit(EXIT_FAILURE);
     }
     // Check if its a type 3 or type 4
     if (formatType == 3) {
@@ -502,6 +534,19 @@ int Disassembler::isNextInstructionLiteral() {
 }
 
 /**
+ * isNextInstructionSymbol check if the next instruction is a reserved word
+ * @return
+ */
+bool Disassembler::isNextInstructionSymbol(){
+    int currentAddress;
+    bool nextSymbol;
+    istringstream(getPC()) >> hex >> currentAddress;    // Get the PC in integer decimal value
+    nextSymbol = symbolTable.count(currentAddress) & currentAddress != 0;
+
+    return nextSymbol;
+}
+
+/**
  * addLiteralInstruction adds a literal instruction to our assembly code.
  * @param opCode The opcode for the literal instruction
  */
@@ -549,6 +594,13 @@ void Disassembler::addSymbolInstructions() {
     }
 }
 
+/**
+ * getSize Gets the size of Disassembler
+ * @return size
+ */
+int Disassembler::getSize() {
+    return size;
+}
 
 /**
  * addHeader will add the first line in our assembly code
