@@ -1,22 +1,29 @@
 #include "header.h"
+#include "Disassembler.h"
 #ifndef HEADER_RECORD_H
 #define HEADER_RECORD_H
 
-static Disassembler* parse_header_Line(string line, Disassembler* disassembler) {
+static Disassembler* parse_header_Line(string line) {
 
 //check if the line entered is a header
+
+
 	if (line.compare(0, 1, "H") == 0) {
 		int textLineSize = line.length();               // Get the length of the line.
+
+		Disassembler disassembler = new Disassembler;
 
 		if (textLineSize == 19) { //checks to make sure the length of the header is valid
 		
 			string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get what type of mnemonic
 
-			string mnemonic = first6Nibbles; // parses the mnemonic out
+			disassembler.mnemonic = first6Nibbles; // parses the mnemonic out
+
+
 
 			string startingAddress(line, 7, 12);
 
-			string address = startingAddress; //parses the starting address out
+			disassembler.address = startingAddress; //parses the starting address out
 
 			string operationLength(line, 13, 18);
 
@@ -26,12 +33,13 @@ static Disassembler* parse_header_Line(string line, Disassembler* disassembler) 
 		else {
 		
 		cout << "Invalid line sent to text processor!" << endl;
-		
+		return null;
 			}
 		}
 	}
 	else {
 		cout << "Invalid line sent to text processor!" << endl;
+		return null;
 		}
 	}
 
