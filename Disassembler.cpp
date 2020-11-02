@@ -606,16 +606,18 @@ int Disassembler::getSize() {
  * addHeader will add the first line in our assembly code
  * @param header
  */
-void Disassembler::addHeader(string header) {
-
+void Disassembler::addHeader(string progName, string startingAddress, string length) {
+    istringstream(length) >> length >> progLength;
+    addInstruction(0,startingAddress,progName,"START","0"," ");
 }
 
 /**
  * addEnd will add the last line in our assembly code
  * @param end
  */
-void Disassembler::addEnd(string end) {
-
+void Disassembler::addEnd(string address) {
+    string first = address;
+    addInstruction(0," ","END","FIRST"," "," ");
 }
 
 /**

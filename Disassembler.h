@@ -22,6 +22,7 @@ struct Literal{
 class Disassembler{
 private:
     int size;
+    int progLength;
     string PC_Counter;
     vector<InstructionLine> line;
     map<string, InstructionLine> lineMap;
@@ -58,8 +59,8 @@ public:
     InstructionLine getInstruction(int position);
     bool isNextInstructionSymbol();
     int getSize();
-    void addHeader(string header);
-    void addEnd(string end);
+    void addHeader(string progName, string startingAddress, string length);
+    void addEnd(string address);
     void changeOperandAddress(string address, string newOperandAddress);
     void printAssembler();
 
