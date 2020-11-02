@@ -43,7 +43,7 @@ void write_file(Disassembler *myDisassembler)
     {
         print_table(myDisassembler->getInstruction(i));
     }
-    myDisassembler->addEnd("0000");
+    myDisassembler->addEnd("000000");
     file.close();
 }
 
