@@ -17,7 +17,7 @@ static Disassembler* parse_header_Line(string line) {
 		
 
 			string startingAddress(line, 7, 12);
-			Disassembler disassembler = new Disassembler(startingAddress);
+			Disassembler disassembler(startingAddress);
 			disassembler.address = startingAddress; //parses the starting address out
 
 			string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get what type of mnemonic
