@@ -7,6 +7,11 @@
 void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 { 
     std::ifstream file(argv[1]);
+
+    if(!file) {
+        cout << "Error - Symbol file not found" << endl;
+    }
+
     std::string str; 
     bool isSym = true;
 
@@ -38,6 +43,11 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 void read_obj_file(int argc, char **argv) {
 
     std::ifstream file(argv[0]);
+
+    if(!file) {
+        cout << "Error - No object file found" << endl;
+    }
+
     std::string str; 
 
     //Disassembler disassembler = parse_header_line(std::getline(file,str));
