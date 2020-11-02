@@ -11,19 +11,18 @@ static Disassembler* parse_header_Line(string line) {
 	if (line.compare(0, 1, "H") == 0) {
 		int textLineSize = line.length();               // Get the length of the line.
 
-		Disassembler disassembler = new Disassembler;
+		
 
 		if (textLineSize == 19) { //checks to make sure the length of the header is valid
 		
+
+			string startingAddress(line, 7, 12);
+			Disassembler disassembler = new Disassembler(startingAddress);
+			disassembler.address = startingAddress; //parses the starting address out
+
 			string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get what type of mnemonic
 
 			disassembler.mnemonic = first6Nibbles; // parses the mnemonic out
-
-
-
-			string startingAddress(line, 7, 12);
-
-			disassembler.address = startingAddress; //parses the starting address out
 
 			string operationLength(line, 13, 18);
 
