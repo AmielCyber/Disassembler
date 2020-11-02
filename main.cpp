@@ -4,7 +4,7 @@
 #include "Disassembler.h"
 #include "textRecord.h"
 
-int main() {
+int main(int argc, char** argv) {
 
     Disassembler disassembler1("000000");
     disassembler1.addLiteral("=X'3F'", 2, "000006");
