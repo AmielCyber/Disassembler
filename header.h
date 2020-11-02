@@ -143,6 +143,8 @@ static string getOP(string op){
     return opCode;
 }
 
+static const char space = ' ';
+static const int width = 8;
 
 
 void read_sym_file(int argc, char **argv);
@@ -163,8 +165,9 @@ void modify_address(int add_loc);
 /* Function Prototype Declarations for header_record.cpp*/
 void parse_end_line(string line);
 /* Function Prototype Declarations for output.cpp*/
-void print_table();
-void write_file();
+template<typename T> void printLine(T t, const int& width);
+void print_table(InstructionLine instruct);
+void write_file(Disassembler *myDisassembler);
 
 
 

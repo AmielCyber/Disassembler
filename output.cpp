@@ -4,8 +4,7 @@
 #include <iostream>
 
 
-const char space = ' ';
-const int width = 8;
+
 /*
  *Template function to help format printing out instruction lines
  */
