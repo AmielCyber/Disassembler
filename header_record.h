@@ -3,7 +3,7 @@
 #ifndef HEADER_RECORD_H
 #define HEADER_RECORD_H
 
-static Disassembler parse_header_Line(string line) {
+static Disassembler parse_header_line(string line) {
 
 	//check if the line entered is a header
 

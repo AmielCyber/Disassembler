@@ -1,4 +1,6 @@
 #include "header.h"
+#include "header_record.h"
+#include "textRecord.h"
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -6,7 +8,7 @@
 
 void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 { 
-    std::ifstream file(argv[1]);
+    std::ifstream file("/Users/admin/Desktop/CS530 Assessments/Assignment 1/sample.sym.txt");
 
     if(!file) {
         cout << "Error - Symbol file not found" << endl;
@@ -30,20 +32,20 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 
         if(isSym && tokens.size() >= 2) {
             disassembler->addSymbol(tokens[0],tokens[1]);
-             cout << "Symbol: " << tokens[0] << " Value: " << tokens[1] << endl;
+             //cout << "Symbol: " << tokens[0] << " Value: " << tokens[1] << endl;
         } else if(tokens.size() >= 2) {
             //Adress is key
-            disassembler->addLiteral(tokens[0],std::stoi(tokens[1]),tokens[1]);
-            cout << "Literal: " << tokens[0] << " Address: " << tokens[2] << endl;
+            disassembler->addLiteral(tokens[0],std::stoi(tokens[1]),tokens[2]);
+            //cout << "Literal: " << tokens[0] << " Address: " << tokens[2] << endl;
         }
 
     }
 }
 
 
-void read_obj_file(int argc, char **argv) {
+Disassembler read_obj_file(int argc, char **argv) {
 
-    std::ifstream file(argv[0]);
+    std::ifstream file("/Users/admin/Desktop/CS530 Assessments/Assignment 1/sample-obj.txt");
 
     if(!file) {
         cout << "Error - No object file found" << endl;
@@ -51,17 +53,21 @@ void read_obj_file(int argc, char **argv) {
     }
 
     std::string str; 
+    std::getline(file,str);
+    cout << str << endl;
+    Disassembler disassembler = parse_header_line(str);
+    read_sym_file(argc,argv,&disassembler);
 
-    //Disassembler disassembler = parse_header_line(std::getline(file,str));
-    //read_sym_file(argc,argv,&disassembler);
 
     while (std::getline(file, str))
     {
+
+        cout << str << endl;
         // if(str.compare(0,1,"H") == 0) {
         //     cout << "Header processed" << endl;
         // } else
-        if(str.compare(0,1,"T") == 0) {
-            //processTextLine(str,&disassembler);
+        if(str.compare(0,1,"T") == 0) { 
+            processTextLine(str,&disassembler);
             cout << "Text line processed" << endl;
         } else if(str.compare(0,1,"M") == 0) {
             //parse_mod_line(str,&disassembler);
@@ -73,7 +79,7 @@ void read_obj_file(int argc, char **argv) {
 
     }
 
-    //return disassembler;
+    return disassembler;
 }
 
 
