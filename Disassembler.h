@@ -57,6 +57,7 @@ public:
     void addSymbolInstructions();
     InstructionLine getInstruction(string address);
     InstructionLine getInstruction(int position);
+    string addZeros(string address);
     bool isNextInstructionSymbol();
     int getSize();
     void addHeader(string progName, string startingAddress, string length);

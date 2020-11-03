@@ -85,24 +85,7 @@ void Disassembler::incrementPC(int numOfBytes) {
     stream << hex << integerAddress;
     string pcString = stream.str();
     // Check to see if we need to add extra zeros and add the new PC in our variable
-    switch (pcString.length()) {
-        case 1:
-            PC_Counter = "00000" + pcString;
-            break;
-        case 2:
-            PC_Counter = "0000" + pcString;
-            break;
-        case 3:
-            PC_Counter = "000" + pcString;
-            break;
-        case 4:
-            PC_Counter = "00" + pcString;
-            break;
-        case 5:
-            PC_Counter = "0" + pcString;
-        default:
-            PC_Counter = pcString;
-    }
+    PC_Counter = addZeros(pcString);
 }
 
 /**
@@ -115,7 +98,7 @@ void Disassembler::incrementPC(int numOfBytes) {
  * @param opCode            The opcode
  */
 void Disassembler::addInstruction(int type, string address, string label, string mnemonic, string operandAddress,
-                               string opCode) {
+                                  string opCode) {
     InstructionLine newAssemblyLine;
     newAssemblyLine.type = type;
     newAssemblyLine.address = address;
@@ -412,7 +395,7 @@ int Disassembler::getFormatType(string threeNibbles) {
     if (formatType) {
         formatType = formatTypeMap.at(opCode);
     } else {
-        cout << "Invalid opCode found: " << opCode << endl;
+        cout << "Invalid opCode found! " << opCode << endl;
         cout << "Now exiting..." << endl;
         exit(EXIT_FAILURE);
     }
@@ -590,7 +573,7 @@ void Disassembler::addSymbolInstructions() {
             stringstream stream;
             stream << hex << address;
             string addressString = stream.str();
-            symbolLine.push_back({0,addressString,label,"RESW","",""});
+            symbolLine.push_back({0,addZeros(addressString),label,"RESW","",""});
             count++;
         }
 
@@ -641,6 +624,31 @@ void Disassembler::addEnd(string address) {
     string first = address;
     addInstruction(0," ","END","FIRST"," "," ");
 }
+
+string Disassembler::addZeros(string address) {
+    string newStr(" ");
+    switch (address.length()) {
+        case 1:
+            newStr = "00000" + address;
+            break;
+        case 2:
+            newStr = "0000" + address;
+            break;
+        case 3:
+            newStr = "000" + address;
+            break;
+        case 4:
+            newStr = "00" + address;
+            break;
+        case 5:
+            newStr = "0" + address;
+        default:
+            newStr = address;
+    }
+    return newStr;
+}
+
+
 
 /**
  * changeOperandAddress is used when we need to modify an address which

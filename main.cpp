@@ -76,10 +76,6 @@ int main(int argc, char** argv) {
 */
     char** c;
 
-    for(int i=0;i<argc;i++){
-        cout<< *(argv+i)<<endl;
-    }
-
     Disassembler dis = read_obj_file(argc,argv);
     write_file(&dis);
 
