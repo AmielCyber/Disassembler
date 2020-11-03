@@ -41,7 +41,7 @@ static Disassembler parse_header_line(string line) {
 
 	else {
 		cout << "Invalid line sent to text processor!" << endl;
-
+		exit(EXIT_FAILURE);
 	}
 }
 
