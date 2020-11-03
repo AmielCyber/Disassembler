@@ -144,7 +144,7 @@ static string getOP(string op){
 }
 
 static const char space = ' ';
-static const int width = 10;
+static const int width = 12;
 
 
 void read_sym_file(int argc, char **argv);
