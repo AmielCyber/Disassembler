@@ -73,7 +73,7 @@ Disassembler read_obj_file(int argc, char **argv) {
             //parse_mod_line(str,&disassembler);
             cout << "Mod record processed" << endl;
         } else if(str.compare(0,1,"E") == 0) {
-            //parse_end_line(str,&disassembler);
+            parse_end_line(str,&disassembler);
             cout << "End line processed" << endl;
         }
 
