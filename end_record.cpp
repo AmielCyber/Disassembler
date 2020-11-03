@@ -18,11 +18,13 @@ void parse_end_line(string line, Disassembler *disassembler)
     else
     {
       cout << "Invalid line" << endl;
+      exit(EXIT_FAILURE);
     }
   }
   else
   {
     cout << "Invalid line" << endl;
+    exit(EXIT_FAILURE);
   }
   
   
