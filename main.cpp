@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
 */
     char** c;
 
-    Disassembler dis = read_obj_file(0,c);
-    write_file(&dis);
+//    Disassembler dis = read_obj_file(0,c);
+    write_file(&disassembler1);
 
     return 0;
 }
