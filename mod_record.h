@@ -2,7 +2,15 @@
 #ifndef MOD_RECORD_H
 #define MOD_RECORD_H
 
-static Disassembler* parse_mod_Line(string line, Disassembler* disassembler) {
+
+static Disassembler* modify_address(string relativeAddress, string lengthOffield, string modificationFlag, string externalSymbol, Disassembler* disassembler) { //modifys the address
+
+	
+	return disassembler;
+
+}
+
+static void parse_mod_line(string line, Disassembler* disassembler) {
 
 //check if the line entered was a modification record
 	if (line.compare(0, 1, "M") == 0) {
@@ -15,35 +23,24 @@ static Disassembler* parse_mod_Line(string line, Disassembler* disassembler) {
 
 			string address = first6Nibbles; // parses the relative address out.
 
-			string lengthOfField(line, 7, 8); //gets the nibbles for the length of field
+			string lengthOfField(line, 7, 1); //gets the nibbles for the length of field
 
 			string length = lengthOfField; //parses length of the field out
 
 			string modificationFlag(line, 9); // parses out the modification flag
 
-			string externalSymbol(line, 10, 15); // parses out the external symbol
-
+			string externalSymbol(line, 10, 4); // parses out the external symbol
+			disassembler = modify_address(first6Nibbles, lengthOfField, modificationFlag, externalSymbol, disassembler);
 		}
 		else {
 			cout << "Invalid line sent to text processor!" << endl;
+			exit(0);
 		}
 		
 
 		}
 	}
 
-	else {
-		cout << "Invalid line sent to text processor!" << endl;
-		}
-	}
-	return disassembler;
-}
 
-static Disassembler* modify_address(int add_loc, Disassembler* disassembler) { //modifys the address
-
-	string address = disassembler->address;
-	return disassembler;
-
-}
 
 #endif 
