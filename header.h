@@ -161,7 +161,7 @@ void format3(string opCode);
 void format4(string opCode);
 bool validateObjCode(string op_code);
 /* Function Prototype Declarations for mod_rec.cpp*/
-void parse_mod_line(string line);
+static void parse_mod_line(string line,Disassembler *disassembler);
 void modify_address(int add_loc);
 /* Function Prototype Declarations for header_record.cpp*/
 void parse_end_line(string line, Disassembler *disassember);

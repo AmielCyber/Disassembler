@@ -17,7 +17,7 @@ static void parse_mod_line(string line, Disassembler* disassembler) {
 
         int textLineSize = line.length();  // Get the length of the text record without the headers
 
-        if (textLineSize == 17) { //checks for valid input
+         //checks for valid input
 
             string first6Nibbles(line, 1, 6);  // Get the first 6 nibbles to get relative address to be modified
 
@@ -31,13 +31,9 @@ static void parse_mod_line(string line, Disassembler* disassembler) {
 
             string externalSymbol(line, 10, 4); // parses out the external symbol
             disassembler = modify_address(first6Nibbles, lengthOfField, modificationFlag, externalSymbol, disassembler);
-        }
-        else {
+    } else {
             cout << "Invalid line sent to text processor!" << endl;
             exit(0);
-        }
-
-
     }
 }
 
