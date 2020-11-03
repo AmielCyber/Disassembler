@@ -574,8 +574,10 @@ void Disassembler::addLiteralInstruction(string opCode) {
 void Disassembler::addSymbolInstructions() {
     int address;
     int lastAddress;
-    int size;
+    int byteSize;
+    int count;
     string label;
+    vector<InstructionLine> symbolLine;
     map<int, string>::iterator iter;    // Create an iterator
 
     // Iterate through the symbol table
@@ -585,12 +587,32 @@ void Disassembler::addSymbolInstructions() {
         istringstream(line.back().address) >> hex >> lastAddress;
         if(address > lastAddress){
             // If the symbol found is not added to the assembly code
-            size = (address - lastAddress) / 3;
             stringstream stream;
             stream << hex << address;
             string addressString = stream.str();
-            addInstruction(0,addressString,label,"RESW",to_string(size)," ");
+            symbolLine.push_back({0,addressString,label,"RESW","",""});
+            count++;
         }
+
+    }
+    int nextAddress, currentAddress;
+    int length = symbolLine.size();
+    int index = 0;
+    while(index<length-1){
+
+        InstructionLine l = symbolLine.at(index);
+        istringstream (symbolLine.at(index+1).address) >> hex >> nextAddress;
+        istringstream (l.address) >>hex>> currentAddress;
+        byteSize = (nextAddress - currentAddress) / 3;
+        addInstruction(l.type,l.address,l.label,l.mnemonic,to_string(byteSize),l.opCode);
+        index++;
+    }
+    if(length > 0 ){
+        InstructionLine l = symbolLine.at(index);
+        nextAddress = progLength;
+        istringstream (l.address) >>hex>> currentAddress;
+        byteSize = (nextAddress - currentAddress) / 3;
+        addInstruction(l.type,l.address,l.label,l.mnemonic,to_string(byteSize),l.opCode);
     }
 }
 
@@ -607,7 +629,7 @@ int Disassembler::getSize() {
  * @param header
  */
 void Disassembler::addHeader(string progName, string startingAddress, string length) {
-    istringstream(length) >> length >> progLength;
+    istringstream(length) >> hex >> progLength;
     addInstruction(0,startingAddress,progName,"START","0"," ");
 }
 

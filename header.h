@@ -149,8 +149,9 @@ static const int width = 8;
 
 void read_sym_file(int argc, char **argv);
 void insert_symbols(string  line);
+Disassembler read_obj_file(int argc, char **argv);
 /* Function Prototype Declarations for header_record.cpp*/
-void parse_header_line(string line);
+static Disassembler parse_header_line(string line);
 /* Function Prototype Declarations for text_record.cpp*/
 static void processTextLine(string line,Disassembler *disassembler);
 void processObjectCode(int byte_length, string op_code);

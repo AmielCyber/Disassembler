@@ -6,7 +6,9 @@
 
 int main(int argc, char** argv) {
 
+
     Disassembler disassembler1("000000");
+    disassembler1.addHeader("HSUM","000000","002F04");
     disassembler1.addLiteral("=X'3F'", 2, "000006");
     disassembler1.addSymbol("FIRST", "000000");
     disassembler1.addSymbol("LOOP", "00000B");
@@ -24,10 +26,27 @@ int main(int argc, char** argv) {
         cout << "Mnemonic: " << instruction.mnemonic << endl;
         cout << "Operand Address: " << instruction.operandAddress << endl;
         cout << "Opcode: " << instruction.opCode << endl;
+	}
+    // Disassembler disassembler1("000000");
+    // disassembler1.addLiteral("=X'3F'", 2, "000006");
+    // disassembler1.addSymbol("FIRST", "000000");
+    // disassembler1.addSymbol("LOOP", "00000B");
+    // disassembler1.addSymbol("COUNT", "00001E");
+    // disassembler1.addSymbol("TABLE", "000021");
+    // disassembler1.addSymbol("TABLE2", "001791");
+    // disassembler1.addSymbol("TOTAL", "002F01");
+    // processTextLine("T0000001E0500000320003F691017911BA0131BC0002F200A3B2FF40F102F014F0000",&disassembler1);
+    // vector<InstructionLine> line = disassembler1.getInstructions();
+    // for(InstructionLine instruction : line){
+    //     cout<<"************************************************"<<endl;
+    //     cout << "Format Type: " << instruction.type << endl;
+    //     cout << "address: "<< instruction.address << endl;
+    //     cout << "Label: "<< instruction.label << endl;
+    //     cout << "Mnemonic: " << instruction.mnemonic << endl;
+    //     cout << "Operand Address: " << instruction.operandAddress << endl;
+    //     cout << "Opcode: " << instruction.opCode << endl;
 
-    }
-
-    
+    // }
 
 /*
     cout << "EXAMPLE 2#######################################################"<<endl;
@@ -55,8 +74,10 @@ int main(int argc, char** argv) {
     }
 
 */
+    char** c;
 
-
+//    Disassembler dis = read_obj_file(0,c);
+    write_file(&disassembler1);
 
     return 0;
 }
