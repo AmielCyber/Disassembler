@@ -36,8 +36,8 @@ void print_table(InstructionLine instruct)
  */
 void write_file(Disassembler *myDisassembler)
 {
-    std::ofstream file("sample.lis.txt");
-    freopen("sample.lis.txt", "w", stdout);     //redirect cout to write into filename
+    std::ofstream file("list.txt");
+    freopen("list.txt", "w", stdout);     //redirect cout to write into filename
     for(int i = 0; i < myDisassembler->getSize(); i++)
     {
         print_table(myDisassembler->getInstruction(i));
