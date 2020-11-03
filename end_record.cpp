@@ -12,7 +12,7 @@ void parse_end_line(string line, Disassembler *disassembler)
     int length = line.length();
     if(length == 7)
     {
-      string startAddress = line.substr(1, length);
+      string startAddress = line.substr(1, length - 1);
       disassembler->addEnd(startAddress);
     }
     else
