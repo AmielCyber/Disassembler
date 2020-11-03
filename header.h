@@ -1,3 +1,8 @@
+/***************************************************************
+ * Amiel Nava RedID:824264864                                  *
+ * Chase Parker RedID:821253141                                *
+ * Kenny Nguyen RedID:821649498 Jeremy Espinosa RedID:821770060*
+ ***************************************************************/
 #ifndef HEADER_H
 #define HEADER_H
 #include <string>		// To use the string object class
