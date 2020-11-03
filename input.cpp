@@ -7,8 +7,9 @@
 #include <iterator>
 
 void read_sym_file(int argc, char **argv, Disassembler *disassembler)
-{ 
-    std::ifstream file(argv[2]);
+{
+    string fileName = *(argv+2);
+    std::ifstream file(fileName);
 
     if(!file) {
         cout << "Error - Symbol file not found" << endl;
@@ -44,8 +45,9 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 
 
 Disassembler read_obj_file(int argc, char **argv) {
+    string fileName = *(argv+1);
+    std::ifstream file(fileName);
 
-    std::ifstream file(argv[1]);
 
     if(!file) {
         cout << "Error - No object file found" << endl;

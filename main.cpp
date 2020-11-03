@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
         cout << "Mnemonic: " << instruction.mnemonic << endl;
         cout << "Operand Address: " << instruction.operandAddress << endl;
         cout << "Opcode: " << instruction.opCode << endl;
-	}
+    }
     // Disassembler disassembler1("000000");
     // disassembler1.addLiteral("=X'3F'", 2, "000006");
     // disassembler1.addSymbol("FIRST", "000000");
@@ -76,7 +76,11 @@ int main(int argc, char** argv) {
 */
     char** c;
 
-//    Disassembler dis = read_obj_file(0,c);
+    for(int i=0;i<argc;i++){
+        cout<< *(argv+i)<<endl;
+    }
+
+    Disassembler dis = read_obj_file(argc,argv);
     write_file(&disassembler1);
 
     return 0;
