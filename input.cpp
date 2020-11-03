@@ -8,7 +8,7 @@
 
 void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 { 
-    std::ifstream file("/Users/admin/Desktop/CS530 Assessments/Assignment 1/sample.sym.txt");
+    std::ifstream file(argv[2]);
 
     if(!file) {
         cout << "Error - Symbol file not found" << endl;
@@ -45,7 +45,7 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 
 Disassembler read_obj_file(int argc, char **argv) {
 
-    std::ifstream file("/Users/admin/Desktop/CS530 Assessments/Assignment 1/sample-obj.txt");
+    std::ifstream file(argv[1]);
 
     if(!file) {
         cout << "Error - No object file found" << endl;
