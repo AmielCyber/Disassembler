@@ -2,6 +2,7 @@
 GCC := g++
 
 OUTPUT := dissem
+OUTPUT_TXT := list.txt
 SOURCES := $(wildcard *.cpp)
 CCFLAGS := -std=c++11 -g
 
@@ -11,6 +12,6 @@ $(OUTPUT):
 	$(GCC) -o $(OUTPUT) $(CCFLAGS) $(SOURCES)
 
 clean:
-	rm $(OUTPUT)
+	rm $(OUTPUT) $(OUTPUT_TXT) 
 
 .PHONY: all
