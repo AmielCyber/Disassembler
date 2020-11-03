@@ -1,6 +1,7 @@
 #include "header.h"
 #include "header_record.h"
 #include "textRecord.h"
+#include "mod_record.h"
 #include <fstream>
 #include <string>
 #include <sstream>
