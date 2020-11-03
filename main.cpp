@@ -6,7 +6,9 @@
 
 int main(int argc, char** argv) {
 
+
     Disassembler disassembler1("000000");
+    disassembler1.addHeader("HSUM","000000","002F04");
     disassembler1.addLiteral("=X'3F'", 2, "000006");
     disassembler1.addSymbol("FIRST", "000000");
     disassembler1.addSymbol("LOOP", "00000B");
@@ -26,8 +28,6 @@ int main(int argc, char** argv) {
         cout << "Opcode: " << instruction.opCode << endl;
 
     }
-
-    
 
 /*
     cout << "EXAMPLE 2#######################################################"<<endl;
