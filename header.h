@@ -164,7 +164,7 @@ bool validateObjCode(string op_code);
 void parse_mod_line(string line);
 void modify_address(int add_loc);
 /* Function Prototype Declarations for header_record.cpp*/
-void parse_end_line(string line);
+void parse_end_line(string line, Disassembler *disassember);
 /* Function Prototype Declarations for output.cpp*/
 template<typename T> void printLine(T t, const int& width);
 void print_table(InstructionLine instruct);
