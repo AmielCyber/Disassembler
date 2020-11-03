@@ -10,8 +10,8 @@ void parse_end_line(string line, Disassembler *disassembler)
   if(line.compare(0, 1, "E") == 0)
   {
     int length = line.length();
-      string startAddress = line.substr(1, length - 1);
-      disassembler->addEnd(startAddress);
+    string startAddress = line.substr(1, length - 1);
+    disassembler->addEnd(startAddress);
     
   }
   else
