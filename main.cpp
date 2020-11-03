@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
         cout << "Mnemonic: " << instruction.mnemonic << endl;
         cout << "Operand Address: " << instruction.operandAddress << endl;
         cout << "Opcode: " << instruction.opCode << endl;
+	}
     // Disassembler disassembler1("000000");
     // disassembler1.addLiteral("=X'3F'", 2, "000006");
     // disassembler1.addSymbol("FIRST", "000000");
