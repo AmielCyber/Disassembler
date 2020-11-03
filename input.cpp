@@ -56,7 +56,7 @@ Disassembler read_obj_file(int argc, char **argv) {
 
     std::string str; 
     std::getline(file,str);
-    cout << str << endl;
+    str.erase(str.size() - 1);
     Disassembler disassembler = parse_header_line(str);
     read_sym_file(argc,argv,&disassembler);
 
@@ -64,12 +64,10 @@ Disassembler read_obj_file(int argc, char **argv) {
     while (std::getline(file, str))
     {
 
-        cout << str << endl;
-        // if(str.compare(0,1,"H") == 0) {
-        //     cout << "Header processed" << endl;
-        // } else
+        str.erase(str.size() - 1);
+
         if(str.compare(0,1,"T") == 0) { 
-            processTextLine(str,&disassembler);
+            processTextLine(str.erase(str.size() - 1),&disassembler);
             cout << "Text line processed" << endl;
         } else if(str.compare(0,1,"M") == 0) {
             //parse_mod_line(str,&disassembler);
