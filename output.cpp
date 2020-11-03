@@ -38,11 +38,11 @@ void write_file(Disassembler *myDisassembler)
 {
     std::ofstream file("list.txt");
     freopen("list.txt", "w", stdout);     //redirect cout to write into filename
+    myDisassembler->addEnd("000000");
     for(int i = 0; i < myDisassembler->getSize(); i++)
     {
         print_table(myDisassembler->getInstruction(i));
     }
-    myDisassembler->addEnd("000000");
     file.close();
 }
 
