@@ -1,7 +1,8 @@
 /***************************************************************
  * Amiel Nava RedID:824264864                                  *
  * Chase Parker RedID:821253141                                *
- * Kenny Nguyen RedID:821649498 Jeremy Espinosa RedID:821770060*
+ * Kenny Nguyen RedID:821649498                                * 
+ * Jeremy Espinosa RedID:821770060                             *
  ***************************************************************/
 #include "Disassembler.h"
 #include "header.h"
