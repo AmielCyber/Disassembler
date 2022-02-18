@@ -13,11 +13,8 @@
 #include <sstream>
 #include "Disassembler.h"
 
-using namespace std;
 
-
-
-static map<string,  string> mnemonicMap = {
+static std::map<std::string,  std::string> mnemonicMap = {
         {"18","ADD"},	    {"68","LDB"},   {"0C","STA"},
         {"58","ADDF"},	{"50","LDCH"},  {"78","STB"},
         {"90","ADDR"},	{"70","LDF"},   {"54","STCH"},
@@ -40,7 +37,7 @@ static map<string,  string> mnemonicMap = {
         {"00","LDA"},	    {"EC","SSK"}
 };
 
-static map<string, int>  formatTypeMap= {
+static std::map<std::string, int>  formatTypeMap= {
         {"18",3},	{"68",3},   {"0C",3},
         {"58",3},	{"50",3},   {"78",3},
         {"90",2},	{"70",3},   {"54",3},
@@ -63,16 +60,16 @@ static map<string, int>  formatTypeMap= {
         {"00",3},	{"EC",3}
 };
 
-static map<string,string> SIC_XE_RegisterMap = {
+static std::map<std::string,std::string> SIC_XE_RegisterMap = {
         {"0","A"},{"1","X"},{"2","L"},
         {"3","B"},{"4","S"},{"5","T"},
         {"6","F"},
 };
 
-static string hexToBinary(string hexidecimal){
+static std::string hexToBinary(std::string hexidecimal){
     int decimalVal;
-    string binaryVal;
-    istringstream(hexidecimal) >> hex >> decimalVal;
+    std::string binaryVal;
+    std::istringstream(hexidecimal) >> std::hex >> decimalVal;
     switch (decimalVal) {
         case 0:
             binaryVal = "0000";
@@ -128,11 +125,11 @@ static string hexToBinary(string hexidecimal){
     return binaryVal;
 }
 
-static string getOP(string op){
+static std::string getOP(std::string op){
     int decimalVal;
-    string firstNibble(op,0,1);
-    string secondNibble(op,1,1);
-    istringstream(secondNibble) >> hex >> decimalVal;
+    std::string firstNibble(op,0,1);
+    std::string secondNibble(op,1,1);
+    std::istringstream(secondNibble) >> std::hex >> decimalVal;
 
     if(decimalVal > 11){
         secondNibble = "C";
@@ -143,7 +140,7 @@ static string getOP(string op){
     }else{
         secondNibble = "0";
     }
-    string opCode(firstNibble + secondNibble);
+    std::string opCode(firstNibble + secondNibble);
 
     return opCode;
 }
@@ -153,34 +150,26 @@ static const int width = 12;
 
 
 void read_sym_file(int argc, char **argv);
-void insert_symbols(string  line);
+void insert_symbols(std::string  line);
 Disassembler read_obj_file(int argc, char **argv);
 /* Function Prototype Declarations for header_record.cpp*/
-static Disassembler parse_header_line(string line);
+static Disassembler parse_header_line(std::string line);
 /* Function Prototype Declarations for text_record.cpp*/
-static void processTextLine(string line,Disassembler *disassembler);
-void processObjectCode(int byte_length, string op_code);
-void format1(string opCode);
-void format2(string opCode);
-void format3(string opCode);
-void format4(string opCode);
-bool validateObjCode(string op_code);
+static void processTextLine(std::string line,Disassembler *disassembler);
+void processObjectCode(int byte_length, std::string op_code);
+void format1(std::string opCode);
+void format2(std::string opCode);
+void format3(std::string opCode);
+void format4(std::string opCode);
+bool validateObjCode(std::string op_code);
 /* Function Prototype Declarations for mod_rec.cpp*/
-static void parse_mod_line(string line,Disassembler *disassembler);
+static void parse_mod_line(std::string line,Disassembler *disassembler);
 void modify_address(int add_loc);
 /* Function Prototype Declarations for header_record.cpp*/
-void parse_end_line(string line, Disassembler *disassember);
+void parse_end_line(std::string line, Disassembler *disassember);
 /* Function Prototype Declarations for output.cpp*/
 template<typename T> void printLine(T t, const int& width);
 void print_table(InstructionLine instruct);
 void write_file(Disassembler *myDisassembler);
-
-
-
-
-
-
-
-
 
 #endif

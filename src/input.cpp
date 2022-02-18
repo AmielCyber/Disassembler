@@ -12,13 +12,14 @@
 #include <sstream>
 #include <iterator>
 
+
 void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 {
-    string fileName = *(argv+2);
+    std::string fileName = *(argv+2);
     std::ifstream file(fileName);
 
     if(!file) {
-        cout << "Error - Symbol file not found" << endl;
+        std::cout << "Error - Symbol file not found" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -28,7 +29,7 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
     while (std::getline(file, str))
     {
         std::istringstream iss(str);
-        vector<string> tokens{istream_iterator<string>{iss},istream_iterator<string>{}};
+        std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},std::istream_iterator<std::string>{}};
 
         if(tokens.size() == 0) {
             isSym = false;
@@ -51,12 +52,12 @@ void read_sym_file(int argc, char **argv, Disassembler *disassembler)
 
 
 Disassembler read_obj_file(int argc, char **argv) {
-    string fileName = *(argv+1);
+    std::string fileName = *(argv+1);
     std::ifstream file(fileName);
 
 
     if(!file) {
-        cout << "Error - No object file found" << endl;
+        std::cout << "Error - No object file found" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -74,13 +75,13 @@ Disassembler read_obj_file(int argc, char **argv) {
 
         if(str.compare(0,1,"T") == 0) { 
             processTextLine(str.erase(str.size() - 1),&disassembler);
-            cout << "Text line processed" << endl;
+            std::cout << "Text line processed" << std::endl;
         } else if(str.compare(0,1,"M") == 0) {
             //parse_mod_line(str,&disassembler);
-            cout << "Mod record processed" << endl;
+            std::cout << "Mod record processed" << std::endl;
         } else if(str.compare(0,1,"E") == 0) {
             parse_end_line(str,&disassembler);
-            cout << "End line processed" << endl;
+            std::cout << "End line processed" << std::endl;
         }
 
     }

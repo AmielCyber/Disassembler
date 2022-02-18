@@ -9,17 +9,14 @@
 #include <iomanip>
 
 
-
 /*
  *Template function to help format printing out instruction lines
  */
-
-
-
 template<typename T> void printLine(T t, const int& width)
 {
-    cout << left << setw(width) << setfill(space) << t;
+    std::cout << std::left << std::setw(width) << std::setfill(space) << t;
 }
+
 /*
  * Print all elements of Instructionline
  * 
@@ -31,10 +28,8 @@ void print_table(InstructionLine instruct)
     printLine(instruct.mnemonic, width);
     printLine(instruct.operandAddress, width);
     printLine(instruct.opCode, width);
-    cout << endl;
+    std::cout << std::endl;
 }
-
-
 
 /*
  * create the output file and print the table of instructions
@@ -50,4 +45,3 @@ void write_file(Disassembler *myDisassembler)
     }
     file.close();
 }
-

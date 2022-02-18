@@ -4,17 +4,22 @@
  # Chase Parker RedID:821253141                                #
  # Kenny Nguyen RedID:821649498 Jeremy Espinosa RedID:821770060#
  ##############################################################
-GCC := g++
-
+CXX := g++
+# non-optional compiler flags
+CXXFLAGS := -std=c++11 -g
+# output object
 OUTPUT := dissem
+# Output text from running dissem
 OUTPUT_TXT := list.txt
-SOURCES := $(wildcard *.cpp)
-CCFLAGS := -std=c++11 -g
+# Source files
+SOURCES := $(wildcard ./src/*.cpp)
+# Header files
+HEADERS := $(wildcard ./src/*.h)
 
 all: $(OUTPUT)
 
-$(OUTPUT):
-	$(GCC) -o $(OUTPUT) $(CCFLAGS) $(SOURCES)
+$(OUTPUT): $(SOURCES) $(HEADERS)
+	$(CXX) $(CXXFLAGS) -o $(OUTPUT) $(SOURCES)
 
 clean:
 	rm $(OUTPUT) $(OUTPUT_TXT) 
